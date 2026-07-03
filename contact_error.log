@@ -1,0 +1,14 @@
+=== Contact form error ===
+Name: Destiny Okonu
+Email: okonudestiny4@gmail.com
+Subject: general
+Message: mmmmmmmmmm
+Exception: table contact_messages has no column named subject
+
+=== Contact form error ===
+Name: Destiny Okonu
+Email: okonudestiny4@gmail.com
+Subject: Contact Form Submission
+Message: mnnnnnnnnnn
+Exception: table contact_messages has no column named subject
+

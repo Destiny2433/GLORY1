@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rev. Moses Babatunde - ECWA Glory Concert</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA Logo"></a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="minister-profile" class="section fade-in visible">
+        <div class="container">
+            <div class="profile-container">
+                <div class="profile-image">
+                    <img src="{{ url_for('static', filename='images/ayando.png') }}" alt="Rev. Moses Babatunde">
+                </div>
+                <div class="profile-text">
+                    <h2>Rev. Moses Babatunde</h2>
+                    <div class="profile-title">DCC Chairman</div>
+                    <p>Rev. Moses Ayando Babatunde serves as the DCC Chairman for ECWA Lagos West, providing visionary leadership and spiritual guidance to the district. His leadership has been pivotal in organizing and sustaining impactful events like the ECWA Glory Concert.</p>
+                    <p>With a deep commitment to community building and spiritual growth, Rev. Ayando has overseen numerous initiatives that strengthen the church's presence and influence in the region. His pastoral care and administrative acumen have earned him respect among peers and congregants alike.</p>
+                    <p>As the DCC Chairman, Rev. Ayando plays a key role in ensuring that the Glory Concert remains a beacon of worship and unity. His dedication to God's work continues to inspire many in their faith journey.</p>
+                    <a href="index.html#ministers" class="cta-button">Back to Ministers</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="index.html#ministers">Ministers</a></li>
+                    <li><a href="index.html#gallery">Gallery</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ECWA Lagos West DCC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Min. Pelumi Deborah - ECWA Glory Concert</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA Logo"></a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="minister-profile" class="section fade-in visible">
+        <div class="container">
+            <div class="profile-container">
+                <div class="profile-image">
+                    <img src="{{ url_for('static', filename='images/download.webp') }}" alt="Min. Pelumi Deborah">
+                </div>
+                <div class="profile-text">
+                    <h2>Min. Pelumi Deborah</h2>
+                    <div class="profile-title">Gospel Minister</div>
+                    <p>Min. Pelumi Deborah is a Spirit-filled gospel minister and worship leader known for her deep, soulful worship and powerful vocal ministry. She has a unique calling to lead people into an intimate encounter with God through music.</p>
+                    <p>With a heart for service and a passion for the gospel, Pelumi has been a blessing to many congregations. Her ministry is characterized by a strong presence of the Holy Spirit and a commitment to authentic worship that transcends boundaries.</p>
+                    <p>As a featured minister at the ECWA Glory Concert, Min. Pelumi Deborah brings a fresh sound of worship that inspires and uplifts. Her ability to lead the congregation into profound moments of praise makes her a vital part of this year's concert experience.</p>
+                    <a href="index.html#ministers" class="cta-button">Back to Ministers</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="index.html#ministers">Ministers</a></li>
+                    <li><a href="index.html#gallery">Gallery</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ECWA Lagos West DCC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

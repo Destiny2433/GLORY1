@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Support and partner with the ECWA Glory Concert to help spread the Gospel through unified worship and praise.">
+    <title>Support - ECWA GLORY CONCERT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA Logo"></a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header id="hero" class="hero" style="height: 50vh; min-height: 400px;">
+        <div class="slideshow-container">
+            <div class="slide active" data-type="image">
+                <img src="{{ url_for('static', filename='images/705365290_17926303863303431_278754292481268159_n.jpg') }}" alt="Support">
+            </div>
+        </div>
+        <div class="hero-overlay" style="background: rgba(0,0,0,0.7);">
+            <h1 class="hero-title">Support & Partner</h1>
+            <p style="font-size: 1.5rem; color: #FFD700; margin-top: 20px; font-family: 'Righteous', cursive;">Join us in spreading the Gospel through your support</p>
+        </div>
+    </header>
+
+    <section class="section fade-in visible" style="padding-top: 80px; min-height: 50vh;">
+        <div class="container">
+            <h2>Partner With Us</h2>
+            <p style="font-size: clamp(1rem, 3vw, 1.2rem); max-width: 800px; margin: 0 auto; line-height: 1.6;">Your financial support helps us to continue to host the ECWA Glory Concert free of charge for all attendees, allowing everyone to experience unfettered praise to the Almighty.</p>
+            <div class="support-details" style="background: rgba(255, 255, 255, 0.1); padding: clamp(20px, 5vw, 40px); border-radius: 15px; margin-top: 40px; text-align: left; max-width: 600px; width: 100%; margin-left: auto; margin-right: auto; border-left: 5px solid #FFD700; box-shadow: 0 10px 30px rgba(0,0,0,0.3); box-sizing: border-box;">
+                <h3 style="color: #FFD700; font-size: clamp(1.5rem, 5vw, 2rem); margin-bottom: 20px; font-family: 'Bebas Neue', sans-serif;">Account Details</h3>
+                <p style="font-size: clamp(1rem, 3vw, 1.2rem); margin-bottom: 15px;"><strong>Bank:</strong> First Bank</p>
+                <p style="font-size: clamp(1rem, 3vw, 1.2rem); margin-bottom: 15px;"><strong>Account Name:</strong> ECWA Lagos West DCC</p>
+                <p style="font-size: clamp(1rem, 3vw, 1.2rem); margin-bottom: 15px;"><strong>Account Number:</strong> Please contact us</p>
+                <p style="font-size: clamp(0.9rem, 2.5vw, 1.1rem); color: #ccc; margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;"><i>Please reference "Glory Concert Support" in your transfer.</i></p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                      <li><a href="{{url_for('index')}}">Home</a></li>
+                      <li><a href="{{url_for('about')}}">About</a></li>
+                    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                    <li><a href="{{url_for('volunteer')}}">Volunteer</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="footer-social">
+                    <a href="https://web.facebook.com/ecwalwdcc" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/ecwalagoswestdcc" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@gloryconcert" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="mailto:info@ecwalagoswestdcc.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ECWA Lagos West DCC. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

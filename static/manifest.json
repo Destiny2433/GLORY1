@@ -1,0 +1,21 @@
+{
+  "name": "GLORY Admin Dashboard",
+  "short_name": "GLORY Admin",
+  "start_url": "/admin",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "description": "Admin dashboard for ECWA GLORY with notifications for new form submissions.",
+  "icons": [
+    {
+      "src": "/static/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <title>Admin Dashboard - ECWA GLORY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-light); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .admin-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            
+        }
+
+        h1 { 
+            font-family: 'Orbitron', sans-serif; 
+            margin: 0;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 { 
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .notif-badge {
+            display: none;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            margin-left: 12px;
+            vertical-align: middle;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        .nav-links a:hover {
+            color: var(--text-light);
+        }
+
+        .nav-links a.logout {
+            color: var(--danger);
+        }
+
+        .nav-links a.logout:hover {
+            color: var(--danger-hover);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .admin-section table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+        }
+
+        .admin-section th,
+        .admin-section td {
+            word-break: break-word;
+            white-space: normal;
+        }
+        
+        @media (min-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .admin-section {
+                padding: 24px;
+            }
+            .form-group {
+                width: 100%;
+            }
+            .admin-section table {
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            .admin-container {
+                padding: 0;
+            }
+            .admin-section {
+                padding: 20px;
+            }
+            button, .btn-small {
+                width: 100%;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .nav-links a {
+                margin-left: 0;
+                font-size: 0.95rem;
+            }
+            .form-group {
+                min-width: 100%;
+            }
+            .admin-section table {
+                font-size: 0.9rem;
+            }
+        }
+
+        .admin-section { 
+            background: var(--panel-bg); 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .admin-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        input[type="text"], textarea, input[type="file"] { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            background: rgba(0,0,0,0.2); 
+            color: var(--text-light); 
+            box-sizing: border-box; 
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        button { 
+            background: var(--primary); 
+            color: #fff; 
+            border: none; 
+            padding: 12px 24px; 
+            cursor: pointer; 
+            border-radius: 8px; 
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover { 
+            background: var(--primary-hover); 
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #000;
+        }
+        .btn-accent:hover {
+            background: var(--accent-hover);
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .grid-container { 
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px; 
+            margin-top: 20px;
+        }
+
+        .card { 
+            background: rgba(0,0,0,0.4); 
+            border-radius: 12px; 
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            padding-top: 100%;
+            overflow: hidden;
+        }
+
+        .card-img-wrapper img { 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            margin: 0 0 15px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .card-actions button {
+            flex: 1;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: var(--text-light);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1><i class="fas fa-cogs"></i> Admin Dashboard</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Back to Site</a>
+                <span id="submission-badge" class="notif-badge" title="New submissions">0</span>
+                <a href="{{ url_for('logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <div class="admin-section">
+                <h2>Update Hero Text</h2>
+                <form action="{{ url_for('admin') }}" method="POST">
+                    <input type="hidden" name="action" value="update_hero">
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" name="main_title" value="{{ hero.main_title if hero else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle / Bible Verse</label>
+                        <textarea name="subtitle" rows="4" required>{{ hero.subtitle if hero else '' }}</textarea>
+                    </div>
+                    <button type="submit"><i class="fas fa-save"></i> Save Hero Text</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2><i class="fas fa-calendar-alt"></i> Update Upcoming Event</h2>
+                <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="update_event">
+                    <div class="form-group">
+                        <label>Event Title</label>
+                        <input type="text" name="title" value="{{ upcoming_event.title if upcoming_event else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Event Date (e.g. Friday 19th June 2026)</label>
+                        <input type="text" name="event_date" value="{{ upcoming_event.event_date if upcoming_event else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Flyer Image (Leave blank to keep current)</label>
+                        <div style="margin-bottom: 10px; font-size: 0.85rem; color: var(--text-muted);">Current: {{ upcoming_event.flyer_image if upcoming_event else 'None' }}</div>
+                        <input type="file" name="flyer_image" accept="image/*">
+                    </div>
+                    <button type="submit"><i class="fas fa-save"></i> Save Event</button>
+                </form>
+            </div>
+
+            <div class="admin-section full-width">
+                <h2><i class="fas fa-users"></i> Manage Ministers</h2>
+                
+                <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 30px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px dashed var(--border-color);">
+                    <h3 style="margin-top:0; font-size: 1.1rem; color: var(--text-light);"><i class="fas fa-plus-circle"></i> Add New Minister</h3>
+                    <input type="hidden" name="action" value="add_minister">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label>Name</label>
+                            <input type="text" name="name" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label>Role</label>
+                            <input type="text" name="role" required placeholder="Guest Minister">
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label>Image</label>
+                            <input type="file" name="image" accept="image/*" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-accent"><i class="fas fa-plus"></i> Add Minister</button>
+                </form>
+
+                <div class="grid-container">
+                    {% for minister in ministers %}
+                    <div class="card">
+                        <div class="card-img-wrapper">
+                            <img src="{{ url_for('static', filename='images/' ~ minister.image) }}" alt="{{ minister.name }}">
+                        </div>
+                        <div class="card-content">
+                            <div>
+                                <h3 class="card-title">{{ minister.name }}</h3>
+                                <p class="card-subtitle">{{ minister.role }}</p>
+                            </div>
+                            <div class="card-actions">
+<button type="button" class="btn-small" onclick="openEditMinisterModal('{{ minister.id }}', {{ minister.name|tojson|safe }}, {{ minister.role|tojson|safe }})"><i class="fas fa-edit"></i> Edit</button>
+                                <form action="{{ url_for('admin') }}" method="POST" style="margin: 0; flex: 1; display: flex;">
+                                    <input type="hidden" name="action" value="delete_minister">
+                                    <input type="hidden" name="minister_id" value="{{ minister.id }}">
+                                    <button type="submit" class="btn-small btn-danger" style="width: 100%;" onclick="return confirm('Delete this minister?');"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="admin-section full-width">
+                <h2><i class="fas fa-images"></i> Manage Gallery</h2>
+                
+                <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 30px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px dashed var(--border-color);">
+                    <h3 style="margin-top:0; font-size: 1.1rem; color: var(--text-light);"><i class="fas fa-upload"></i> Upload Gallery Image</h3>
+                    <input type="hidden" name="action" value="add_gallery">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                        <div class="form-group" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                            <label>Select Images (hold Ctrl / Cmd to pick multiple)</label>
+                            <input type="file" name="images" accept="image/*" multiple required>
+                        </div>
+                        <button type="submit" class="btn-accent"><i class="fas fa-upload"></i> Upload</button>
+                    </div>
+                </form>
+
+                <div class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+                    {% for image in gallery_images %}
+                    <div class="card">
+                        <div class="card-img-wrapper" style="padding-top: 75%;">
+                            <img src="{{ url_for('static', filename='images/' ~ image.image_path) }}" alt="Gallery Image">
+                        </div>
+                        <div class="card-content" style="padding: 10px;">
+                            <form action="{{ url_for('admin') }}" method="POST" style="margin: 0;">
+                                <input type="hidden" name="action" value="delete_gallery">
+                                <input type="hidden" name="image_id" value="{{ image.id }}">
+                                <button type="submit" class="btn-small btn-danger" style="width: 100%;" onclick="return confirm('Delete this image?');"><i class="fas fa-trash"></i> Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Form Submissions Section -->
+            <div class="admin-section full-width" style="margin-top: 30px;">
+                <h2><i class="fas fa-inbox"></i> Form Submissions</h2>
+                
+                <!-- Tab Headers -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-wrap: wrap;">
+                    <button class="btn-accent btn-small" id="tab-btn-volunteers" onclick="switchSubmissionTab('volunteers')"><i class="fas fa-users"></i> Volunteers ({{ volunteer_applications|length }})</button>
+                    <button class="btn-small" style="background: rgba(255,255,255,0.1);" id="tab-btn-contacts" onclick="switchSubmissionTab('contacts')"><i class="fas fa-envelope"></i> Contact Messages ({{ contact_messages|length }})</button>
+                    <button class="btn-small" style="background: rgba(255,255,255,0.1);" id="tab-btn-newsletter" onclick="switchSubmissionTab('newsletter')"><i class="fas fa-paper-plane"></i> Newsletter Subscribers ({{ newsletter_subscribers|length }})</button>
+                </div>
+
+                <!-- Volunteer Applications Tab -->
+                <div id="tab-volunteers" class="tab-content" style="overflow-x: auto;">
+                    {% if volunteer_applications %}
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; background: rgba(0,0,0,0.2); border-radius: 8px; min-width: 600px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color); background: rgba(255,255,255,0.05);">
+                                <th style="padding: 12px; color: var(--accent);">Full Name</th>
+                                <th style="padding: 12px; color: var(--accent);">Email</th>
+                                <th style="padding: 12px; color: var(--accent);">Phone</th>
+                                <th style="padding: 12px; color: var(--accent);">Age</th>
+                                <th style="padding: 12px; color: var(--accent);">Team</th>
+                                <th style="padding: 12px; color: var(--accent);">Date</th>
+                                <th style="padding: 12px; text-align: center; color: var(--accent);">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in volunteer_applications %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 12px; font-weight: 600;">{{ app.full_name }}</td>
+                                <td style="padding: 12px;">{{ app.email }}</td>
+                                <td style="padding: 12px;">{{ app.phone }}</td>
+                                <td style="padding: 12px;">{{ app.age if app.age else 'N/A' }}</td>
+                                <td style="padding: 12px;"><span style="background: #3b82f6; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{ app.team }}</span></td>
+                                <td style="padding: 12px; font-size: 0.85rem; color: var(--text-muted);">{{ app.submitted_at }}</td>
+                                <td style="padding: 12px; text-align: center;">
+                                    <form action="{{ url_for('admin') }}" method="POST" style="margin: 0; display: inline-block;">
+                                        <input type="hidden" name="action" value="delete_volunteer">
+                                        <input type="hidden" name="volunteer_id" value="{{ app.id }}">
+                                        <button type="submit" class="btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this application?');"><i class="fas fa-trash"></i> Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p style="text-align: center; color: var(--text-muted); padding: 20px;">No volunteer applications received yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Contact Messages Tab -->
+                <div id="tab-contacts" class="tab-content" style="display: none; overflow-x: auto;">
+                    {% if contact_messages %}
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; background: rgba(0,0,0,0.2); border-radius: 8px; min-width: 600px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color); background: rgba(255,255,255,0.05);">
+                                <th style="padding: 12px; color: var(--accent);">Name</th>
+                                <th style="padding: 12px; color: var(--accent);">Email</th>
+                                <th style="padding: 12px; color: var(--accent);">Message</th>
+                                <th style="padding: 12px; color: var(--accent);">Date</th>
+                                <th style="padding: 12px; text-align: center; color: var(--accent);">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for msg in contact_messages %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 12px; font-weight: 600;">{{ msg.name }}</td>
+                                <td style="padding: 12px;">{{ msg.email }}</td>
+                                <td style="padding: 12px; max-width: 300px; white-space: pre-wrap; font-size: 0.9rem;">{{ msg.message }}</td>
+                                <td style="padding: 12px; font-size: 0.85rem; color: var(--text-muted);">{{ msg.submitted_at }}</td>
+                                <td style="padding: 12px; text-align: center;">
+                                    <form action="{{ url_for('admin') }}" method="POST" style="margin: 0; display: inline-block;">
+                                        <input type="hidden" name="action" value="delete_contact">
+                                        <input type="hidden" name="contact_id" value="{{ msg.id }}">
+                                        <button type="submit" class="btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this message?');"><i class="fas fa-trash"></i> Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p style="text-align: center; color: var(--text-muted); padding: 20px;">No contact messages received yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Newsletter Tab -->
+                <div id="tab-newsletter" class="tab-content" style="display: none; overflow-x: auto;">
+                    {% if newsletter_subscribers %}
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; background: rgba(0,0,0,0.2); border-radius: 8px; min-width: 400px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color); background: rgba(255,255,255,0.05);">
+                                <th style="padding: 12px; color: var(--accent);">Email Address</th>
+                                <th style="padding: 12px; color: var(--accent);">Date Subscribed</th>
+                                <th style="padding: 12px; text-align: center; color: var(--accent);">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub in newsletter_subscribers %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 12px; font-weight: 600;">{{ sub.email }}</td>
+                                <td style="padding: 12px; font-size: 0.85rem; color: var(--text-muted);">{{ sub.subscribed_at }}</td>
+                                <td style="padding: 12px; text-align: center;">
+                                    <form action="{{ url_for('admin') }}" method="POST" style="margin: 0; display: inline-block;">
+                                        <input type="hidden" name="action" value="delete_newsletter">
+                                        <input type="hidden" name="subscriber_id" value="{{ sub.id }}">
+                                        <button type="submit" class="btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this subscriber?');"><i class="fas fa-trash"></i> Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p style="text-align: center; color: var(--text-muted); padding: 20px;">No newsletter subscribers yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Edit Minister Modal -->
+    <div id="editMinisterModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditMinisterModal()">&times;</span>
+            <h2><i class="fas fa-edit"></i> Edit Minister</h2>
+            <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="edit_minister">
+                <input type="hidden" name="minister_id" id="edit_minister_id">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" id="edit_minister_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <input type="text" name="role" id="edit_minister_role" required>
+                </div>
+                <div class="form-group">
+                    <label>New Image (Leave blank to keep current)</label>
+                    <input type="file" name="image" accept="image/*">
+                </div>
+                <button type="submit"><i class="fas fa-save"></i> Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditMinisterModal(id, name, role) {
+            document.getElementById('edit_minister_id').value = id;
+            document.getElementById('edit_minister_name').value = name;
+            document.getElementById('edit_minister_role').value = role;
+            document.getElementById('editMinisterModal').style.display = 'flex';
+        }
+
+        function closeEditMinisterModal() {
+            document.getElementById('editMinisterModal').style.display = 'none';
+        }
+
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('editMinisterModal')) {
+                closeEditMinisterModal();
+            }
+        }
+
+        function switchSubmissionTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.style.display = 'none');
+            
+            // Show requested tab content
+            document.getElementById('tab-' + tabName).style.display = 'block';
+            
+            // Update active states of button styles
+            const buttons = [
+                { id: 'tab-btn-volunteers', name: 'volunteers' },
+                { id: 'tab-btn-contacts', name: 'contacts' },
+                { id: 'tab-btn-newsletter', name: 'newsletter' }
+            ];
+            
+            buttons.forEach(btn => {
+                const el = document.getElementById(btn.id);
+                if (el) {
+                    if (btn.name === tabName) {
+                        el.className = 'btn-small btn-accent';
+                        el.style.background = '';
+                    } else {
+                        el.className = 'btn-small';
+                        el.style.background = 'rgba(255,255,255,0.1)';
+                    }
+                }
+            });
+        }
+
+        const submissionCounts = {
+            volunteers: {{ volunteer_applications|length }},
+            contacts: {{ contact_messages|length }},
+            newsletter: {{ newsletter_subscribers|length }}
+        };
+
+        let badgeTotal = 0;
+
+        function updateBadge(n) {
+            const el = document.getElementById('submission-badge');
+            if (!el) return;
+            if (n && n > 0) {
+                el.style.display = 'inline-block';
+                el.textContent = n;
+            } else {
+                el.style.display = 'none';
+                el.textContent = '0';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const el = document.getElementById('submission-badge');
+            if (el) {
+                el.addEventListener('click', () => {
+                    badgeTotal = 0;
+                    updateBadge(0);
+                });
+            }
+            updateBadge(0);
+        });
+
+        function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                console.warn('Browser does not support notifications.');
+                return;
+            }
+            if (Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    console.log('Notification permission:', permission);
+                });
+            }
+        }
+
+        function notifyAdmin(title, body) {
+            if (!('Notification' in window) || Notification.permission !== 'granted') {
+                return;
+            }
+            const notification = new Notification(title, {
+                body,
+                icon: '{{ url_for('static', filename='images/logo.png') }}',
+                badge: '{{ url_for('static', filename='images/logo.png') }}'
+            });
+            notification.onclick = () => {
+                window.focus();
+            };
+        }
+
+        function pollSubmissionUpdates() {
+            fetch('{{ url_for('admin_submission_summary') }}', { credentials: 'same-origin' })
+                .then(response => response.json())
+                .then(data => {
+                    let hasChanges = false;
+                    if (data.volunteer_applications > submissionCounts.volunteers) {
+                        notifyAdmin('New Volunteer Application', `You have ${data.volunteer_applications - submissionCounts.volunteers} new volunteer application(s).`);
+                        hasChanges = true;
+                    }
+                    if (data.contact_messages > submissionCounts.contacts) {
+                        notifyAdmin('New Contact Message', `You have ${data.contact_messages - submissionCounts.contacts} new contact message(s).`);
+                        hasChanges = true;
+                    }
+                    if (data.newsletter_subscribers > submissionCounts.newsletter) {
+                        notifyAdmin('New Newsletter Signup', `You have ${data.newsletter_subscribers - submissionCounts.newsletter} new subscriber(s).`);
+                        hasChanges = true;
+                    }
+                    if (hasChanges) {
+                        let diff = (data.volunteer_applications - submissionCounts.volunteers) + (data.contact_messages - submissionCounts.contacts) + (data.newsletter_subscribers - submissionCounts.newsletter);
+                        badgeTotal += diff;
+                        updateBadge(badgeTotal);
+                        setTimeout(() => location.reload(), 1500);
+                    }
+
+                    submissionCounts.volunteers = data.volunteer_applications;
+                    submissionCounts.contacts = data.contact_messages;
+                    submissionCounts.newsletter = data.newsletter_subscribers;
+                })
+                .catch(err => console.warn('Notification poll failed:', err));
+        }
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.warn('Service Worker registration failed:', error);
+                    });
+            }
+        }
+
+        function showToast(message) {
+            let t = document.getElementById('admin-toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'admin-toast';
+                t.style.position = 'fixed';
+                t.style.right = '20px';
+                t.style.bottom = '20px';
+                t.style.background = 'rgba(0,0,0,0.8)';
+                t.style.color = '#fff';
+                t.style.padding = '12px 18px';
+                t.style.borderRadius = '8px';
+                t.style.boxShadow = '0 8px 20px rgba(0,0,0,0.5)';
+                t.style.zIndex = 2000;
+                document.body.appendChild(t);
+            }
+            t.textContent = message;
+            t.style.opacity = '1';
+            setTimeout(() => { t.style.opacity = '0'; }, 3000);
+        }
+
+        function attachAdminAjax() {
+            const adminForms = document.querySelectorAll('.admin-section form');
+            adminForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const fd = new FormData(form);
+                    fetch(form.action || window.location.pathname, {
+                        method: form.method || 'POST',
+                        body: fd,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        credentials: 'same-origin'
+                    }).then(r => r.json()).then(data => {
+                        showToast(data.message || 'Saved');
+                    }).catch(err => {
+                        console.error('Admin form submit failed', err);
+                        showToast('Request failed');
+                    });
+                });
+            });
+        }
+
+        window.addEventListener('load', () => {
+            switchSubmissionTab('volunteers');
+            registerServiceWorker();
+            requestNotificationPermission();
+            pollSubmissionUpdates();
+            setInterval(pollSubmissionUpdates, 5000);
+            attachAdminAjax();
+        });
+    </script>
+</body>
+</html>

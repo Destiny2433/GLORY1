@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ECWA Glory Concert</title>
+    <meta name="description" content="Get in touch with ECWA Glory Concert. Send us a message and we'll get back to you shortly.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+    <style>
+        .contact-hero {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0d1b2a 100%);
+            padding: 120px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.12) 0%, transparent 70%);
+        }
+        .contact-hero h1 {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            color: #FFD700;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .contact-hero p {
+            color: rgba(255,255,255,0.75);
+            font-size: 1.15rem;
+            max-width: 550px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .contact-section {
+            padding: 80px 20px 100px;
+            background: #0d0d0d;
+        }
+        .contact-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: start;
+        }
+        .contact-form-card {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+        @media (max-width: 900px) {
+            .contact-section { padding: 70px 18px 80px; }
+            .contact-wrapper { gap: 40px; }
+        }
+        @media (max-width: 640px) {
+            .contact-hero { padding: 80px 16px 50px; }
+            .contact-section { padding: 50px 16px 60px; }
+            .contact-form-card { padding: 28px 22px; }
+            .info-card { padding: 18px 20px; }
+        }
+        @media (max-width: 500px) { .form-row-2 { grid-template-columns: 1fr; } }
+
+        /* Info cards */
+        .contact-info h2 {
+            font-family: 'Righteous', cursive;
+            color: #FFD700;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        .contact-info > p {
+            color: rgba(255,255,255,0.65);
+            margin-bottom: 36px;
+            line-height: 1.7;
+        }
+        .info-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,215,0,0.15);
+            border-radius: 14px;
+            padding: 20px 22px;
+            margin-bottom: 16px;
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .info-card:hover {
+            border-color: rgba(255,215,0,0.45);
+            background: rgba(255,215,0,0.06);
+        }
+        .info-card-icon {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            color: #000;
+        }
+        .info-card-text h4 {
+            color: #fff;
+            margin: 0 0 4px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .info-card-text p, .info-card-text a {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            margin: 0;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .info-card-text a:hover { color: #FFD700; }
+
+        .social-connect { margin-top: 30px; }
+        .social-connect h4 { color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 14px; letter-spacing: 0.05em; text-transform: uppercase; }
+        .social-icons-row { display: flex; gap: 12px; }
+        .social-icons-row a {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,215,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.75);
+            font-size: 1rem;
+            transition: all 0.25s;
+            text-decoration: none;
+        }
+        .social-icons-row a:hover {
+            background: #FFD700; color: #000; border-color: #FFD700;
+            transform: translateY(-3px);
+        }
+
+        /* Contact form card */
+        .contact-form-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
+            padding: 40px 36px;
+        }
+        .contact-form-card .form-error {
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #fee2e2;
+            font-size: 0.95rem;
+        }
+        .contact-form-card h2 {
+            font-family: 'Righteous', cursive;
+            color: #FFD700;
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+        .contact-form-card > p {
+            color: rgba(255,255,255,0.55);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+        }
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 500px) { .form-row-2 { grid-template-columns: 1fr; } }
+        .form-field { margin-bottom: 18px; }
+        .form-field label {
+            display: block;
+            color: rgba(255,255,255,0.75);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 7px;
+            letter-spacing: 0.02em;
+        }
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,215,0,0.25);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.25s, background 0.25s;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-field input::placeholder,
+        .form-field textarea::placeholder { color: rgba(255,255,255,0.3); }
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: #FFD700;
+            background: rgba(255,215,0,0.06);
+        }
+        .form-field textarea { resize: vertical; min-height: 130px; }
+        .form-field select option { background: #1a1a2e; color: #fff; }
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Righteous', cursive;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,215,0,0.35);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA Logo"></a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
+                <li><a href="{{ url_for('contact') }}" class="active">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="contact-hero">
+        <h1><i class="fas fa-envelope-open-text"></i> Get In Touch</h1>
+        <p>Have a question, suggestion, or just want to say hello? We'd love to hear from you!</p>
+    </div>
+
+    <!-- Main Content -->
+    <section class="contact-section">
+        <div class="contact-wrapper">
+            <!-- Left: Info -->
+            <div class="contact-info">
+                <h2>We're Here For You</h2>
+                <p>Reach out through any of the channels below and a member of our team will respond as soon as possible.</p>
+
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="info-card-text">
+                        <h4>Email Us</h4>
+                        <a href="mailto:info@ecwalagoswestdcc.com">info@ecwalagoswestdcc.com</a>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fab fa-whatsapp"></i></div>
+                    <div class="info-card-text">
+                        <h4>WhatsApp</h4>
+                        <a href="https://wa.me/2341234567890" target="_blank">+234 123 456 7890</a>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="info-card-text">
+                        <h4>Venue</h4>
+                        <p>ECWA Challenge Compound, Lagos, Nigeria</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fas fa-clock"></i></div>
+                    <div class="info-card-text">
+                        <h4>Response Time</h4>
+                        <p>We typically respond within 24–48 hours</p>
+                    </div>
+                </div>
+
+                <div class="social-connect">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons-row">
+                        <a href="https://web.facebook.com/ecwalwdcc" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/ecwalagoswestdcc" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@gloryconcert" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://wa.me/2341234567890" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Form -->
+            <div class="contact-form-card">
+                <h2>Send a Message</h2>
+                <p>Fill in the form below and we'll get back to you shortly.</p>
+                <form action="{{ url_for('contact') }}" method="POST" id="contact-page-form">
+                    <div class="form-row-2">
+                        <div class="form-field">
+                            <label for="contact-name">Full Name <span style="color:#FFD700">*</span></label>
+                            <input type="text" id="contact-name" name="name" placeholder="John Doe" value="{{ request.form.get('name', '') }}" required autocomplete="name">
+                        </div>
+                        <div class="form-field">
+                            <label for="contact-email">Email Address <span style="color:#FFD700">*</span></label>
+                            <input type="email" id="contact-email" name="email" placeholder="you@example.com" value="{{ request.form.get('email', '') }}" required autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="contact-subject">Subject</label>
+                        <select id="contact-subject" name="subject">
+                            <option value="" {% if request.form.get('subject', '') == '' %}selected{% endif %}>Select a topic…</option>
+                            <option value="general" {% if request.form.get('subject') == 'general' %}selected{% endif %}>General Enquiry</option>
+                            <option value="volunteer" {% if request.form.get('subject') == 'volunteer' %}selected{% endif %}>Volunteering</option>
+                            <option value="media" {% if request.form.get('subject') == 'media' %}selected{% endif %}>Media & Press</option>
+                            <option value="support" {% if request.form.get('subject') == 'support' %}selected{% endif %}>Support / Donations</option>
+                            <option value="other" {% if request.form.get('subject') == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    {% if error %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endif %}
+                    <div class="form-field">
+                        <label for="contact-message">Message <span style="color:#FFD700">*</span></label>
+                        <textarea id="contact-message" name="message" placeholder="Type your message here…" required>{{ request.form.get('message', '') }}</textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standard Footer (matches index.html) -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>ECWA Glory Concert</h3>
+                <p>ECWA's Largest Gospel Gathering.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('about') }}">About the Concert</a></li>
+                    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                    <li><a href="{{ url_for('support') }}">Support</a></li>
+                    <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>Email: info@ecwalagoswestdcc.com</p>
+                <div class="footer-social">
+                    <a href="https://web.facebook.com/ecwalwdcc" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/ecwalagoswestdcc" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@gloryconcert" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ECWA Lagos West DCC. All rights reserved.</p>
+            <p>Made with ❤️ for God's Glory by <a style="color: azure;" href="bit.ly/HiveryTech">HiveryTech LTD</a></p>
+        </div>
+    </footer>
+
+    <!-- Global Modal (injected by script.js) -->
+    <div id="glory-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+        <div id="glory-modal-box" style="background:linear-gradient(135deg,#1a0a2e,#0d1b2a);border:1px solid rgba(255,215,0,0.4);border-radius:20px;padding:40px 36px;max-width:440px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.6);position:relative;">
+            <div id="glory-modal-icon" style="font-size:3rem;margin-bottom:16px;"></div>
+            <h3 id="glory-modal-title" style="color:#FFD700;font-family:'Righteous',cursive;font-size:1.5rem;margin-bottom:10px;"></h3>
+            <p id="glory-modal-message" style="color:rgba(255,255,255,0.78);line-height:1.65;margin-bottom:28px;"></p>
+            <button id="glory-modal-close" style="background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;border:none;padding:12px 32px;border-radius:10px;font-weight:700;font-size:1rem;cursor:pointer;font-family:'Righteous',cursive;letter-spacing:0.04em;">OK</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

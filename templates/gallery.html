@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ECWA's Largest Gospel Concert. Join the ECWA GLORY CONCERT 2025, a free all-night gospel music concert featuring renowned artists. Experience unified worship and praise on November 21-23, 2025 at Ecwa Challenge Compound, Lagos.">
+    <meta property="og:title" content="ECWA GLORY CONCERT 2025">
+    <meta property="og:description" content="Free all-night gospel music concert featuring celebrated psalmists. November 21-23, 2025 at Ecwa Challenge Compound, Lagos.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+    <meta property="og:url" content="https://ecwalagoswestdcc.org">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ECWA GLORY CONCERT 2025">
+    <meta name="twitter:description" content="Free all-night gospel music concert featuring celebrated psalmists. November 21-23, 2025 at Ecwa Challenge Compound, Lagos.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "ECWA GLORY CONCERT 2025",
+      "description": "A free all-night gospel music concert featuring celebrated psalmists from Nigeria and around the world. Experience unified worship and praise across three powerful nights culminating in one glorious day of thanksgiving.",
+      "startDate": "2025-11-21T18:00:00+01:00",
+      "endDate": "2025-11-23T23:59:00+01:00",
+      "location": {
+        "@type": "Place",
+        "name": "Ecwa Challenge Compound",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lagos",
+          "addressCountry": "NG"
+        }
+      },
+      "organizer": {
+        "@type": "Organization",
+        "name": "ECWA Lagos West DCC",
+        "url": "https://ecwalagoswestdcc.org"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "NGN",
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2025-01-01T00:00:00+01:00"
+      },
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "eventStatus": "https://schema.org/EventScheduled"
+    }
+    </script>
+    <title>ECWA GLORY CONCERT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA Logo">
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+
+        </div>
+    </nav>
+    <header id="hero" class="hero">
+
+
+        <div class="slideshow-container">
+            <div class="slide active" data-type="image">
+                <img src="{{ url_for('static', filename='images/gloryt.jpg') }}" alt="Glory Moment 1">
+            </div>
+
+        </div>
+        <div class="hero-overlay">
+            <h1 class="hero-title"> Gallery</h1>
+        </div>
+        <div class="slideshow-controls">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            
+        </div>
+    </header>
+       <section id="gallery" class="section fade-in visible">
+        <div class="container">
+            <h2>Gallery</h2>
+            <div class="gallery-grid">
+                {% for image in images %}
+                
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='images/' ~ image.image_path) }}" alt="Gallery Image" loading="lazy"></div>
+                
+                {% endfor %}
+        </div>
+        </div>
+    </div>
+    </section>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>

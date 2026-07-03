@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ECWA's Largest Gospel Concert. Join the ECWA GLORY CONCERT 2025, a free all-night gospel music concert featuring renowned artists. Experience unified worship and praise on November 21-23, 2025 at Ecwa Challenge Compound, Lagos.">
+    <meta property="og:title" content="ECWA GLORY CONCERT 2025">
+    <meta property="og:description" content="Free all-night gospel music concert featuring celebrated psalmists. November 21-23, 2025 at Ecwa Challenge Compound, Lagos.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+    <meta property="og:url" content="https://ecwalagoswestdcc.org">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ECWA GLORY CONCERT 2025">
+    <meta name="twitter:description" content="Free all-night gospel music concert featuring celebrated psalmists. November 21-23, 2025 at Ecwa Challenge Compound, Lagos.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "ECWA GLORY CONCERT 2025",
+      "description": "A free all-night gospel music concert featuring celebrated psalmists from Nigeria and around the world. Experience unified worship and praise across three powerful nights culminating in one glorious day of thanksgiving.",
+      "location": {
+        "@type": "Place",
+        "name": "Ecwa Challenge Compound",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lagos",
+          "addressCountry": "NG"
+        }
+        "url":"",
+        "logo":"{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}",
+
+      },
+      "organizer": {
+        "@type": "Organization",
+        "name": "ECWA Lagos West DCC",
+        "url": "https://ecwalagoswestdcc.org"
+        "sameAs":[
+    "https://web.facebook.com/ecwalwdcc",
+    "https://instagram.com/ecwalwdcc",
+    "https://youtube.com/@gloryconcert"
+      },
+     
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "eventStatus": "https://schema.org/EventScheduled"
+    }
+    </script>
+   
+    <title>ECWA GLORY CONCERT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA Logo"></a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('support') }}">Support</a></li>
+                <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+
+        </div>
+    </nav>
+    <header id="hero" class="hero">
+
+
+        <div class="slideshow-container">
+            <div class="slide active" data-type="video">
+                <video id="hero-video" autoplay muted>
+                    <source src="{{ url_for('static', filename='images/VID.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="slide" data-type="image">
+                <img src="{{ url_for('static', filename='images/WhatsApp Image 2026-06-17 at 8.55.45 AM.jpeg') }}" alt="Glory Moment 1">
+            </div>
+
+        </div>
+        <div class="hero-overlay">
+            <h1 class="hero-title">{{ hero.main_title }}</h1>
+            <blockquote class="bible-verse">{{ hero.subtitle }}</blockquote>
+            <a href="#about" class="cta-button">Learn More</a>
+        </div>
+        <div class="slideshow-controls">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            
+        </div>
+    </header>
+
+    <section id="cta" class="section fade-in visible">
+        <div class="container">
+            <h2>🎶 ECWA GLORY CONCERT 2025 🎶<br>**3 Nights, 1 Day — One Voice, One Praise!**</h2>
+            <p>Join us for an unforgettable worship experience across three powerful nights, culminating in one glorious day of thanksgiving.<br>Raise your heart, hands, and voice in unity as we celebrate God’s faithfulness together.</p>
+        </div>
+    </section>
+
+    <section id="about" class="section fade-in visible">
+        <div class="about-section">
+            <h2>About the Concert</h2>
+            <div class="about-content">
+                <div class="livestream-box">
+                    <iframe width="350" height="315" src="https://www.youtube.com/live/LMLp-aBI0BE?si=rmvAvbSet2T41nlT" title="Last Glory Livestream" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <div class="about-text">
+                    <p>‘Ecwa Glory Concert’ is a free, all-night Gospel music concert featuring some of the most celebrated and exceptional psalmists from Nigeria and around the world. This phenomenal concert is convened annually by Ecwa Lagos West DCC (LWDCC). Birthed by a God-inspired vision, ‘Ecwa Glory Concert’ provides a platform where all can raise their hearts, hands and voices together as one in unfettered praise to the Almighty irrespective of tribe, denomination, creed or language.</p>
+                <a href="{{ url_for('about') }}"  class="dcc-link">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="section-yh" class="section social-section visible">
+        <div class="container">
+            <h2>Connect With Us</h2>
+            <div class="social-bar">
+                <a href="https://web.facebook.com/ecwalwdcc" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/ecwalagoswestdcc" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/@gloryconcert" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="mailto:info@ecwalagoswestdcc.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </div>
+<section id="convenor" class="section fade-in visible">
+    <div class="container">
+        <div class="profile-container">
+            <div class="profile-image">
+                <img src="{{ url_for('static', filename='images/glory chairman.jpeg') }}" alt="Eld. Davids Malachi">
+            </div>
+            <div class="profile-text">
+                <h2>Eld. Davids Malachi</h2>
+                <div class="profile-title">GLORY COMMITTEE CHAIRMAN</div>
+                <p>Eld. Davids Malachi is the esteemed Chairman of the Glory Committee, leading with vision and dedication to the ECWA Glory Concert.</p>
+                <p>With years of committed service, he oversees the organization and execution of this inspiring event, fostering unity and worship.</p>
+               
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="ministers" class="section fade-in visible">
+    <div class="container">
+        <h2 class="ministers-title">Every Year Ecwa Glory Concert, We Leading Worship</h2>
+        <div class="ministers-desc">
+            <p>Every Year At Ecwa Glory Concert, we are blessed with an unforgettable experience of Heaven on Earth. Our talented ministers, psalmists, worshippers, and beyond-men and women of diverse cultures, languages, tribes, and nations unite in spirit and soul. This year is no exception.</p>
+        </div>
+        <div class="ministers-grid">
+            {% for minister in ministers %}
+            <div class="minister-card">
+                <img src="{{ url_for('static', filename='images/' ~ minister.image) }}" alt="{{ minister.name }}">
+                <h3>{{ minister.name }}</h3>
+                <p>{{ minister.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<section id="upcoming-events" class="section fade-in visible">
+    <div class="upcoming-events container">
+        <h2 class="ministers-title">UPCOMING EVENTS</h2>
+        <div class="profile-title">{{ upcoming_event.title if upcoming_event else 'TBA' }}</div>
+        <p style="font-size: 1.5rem; color: #FFD700; margin: 20px 0; font-family: 'Righteous', cursive;">{{ upcoming_event.event_date if upcoming_event else 'TBA' }}</p>
+        {% if upcoming_event and upcoming_event.flyer_image %}
+        <img src="{{ url_for('static', filename='images/' ~ upcoming_event.flyer_image) }}" alt="Upcoming Event Flyer" style="max-width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-top: 20px; max-height: 500px; object-fit: contain;">
+        {% endif %}
+    </div>
+</section>
+
+
+    <section id="gallery" class="section fade-in visible">
+        <div class="container">
+            <h2>Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="{{ url_for('static', filename='images/pr.jpg') }}" alt="Worship Moment"></div>
+                <div class="gallery-item"><img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Gospel Artists"></div>
+                <div class="gallery-item"><img src="{{ url_for('static', filename='images/gloryt.jpg') }}" alt="Audience"></div>
+                <div class="gallery-item"><img src="{{ url_for('static', filename='images/gtr.jpg') }}" alt="Stage"></div>
+                         
+                             <a href="{{url_for('gallery')}}" style="position: center;" class="cta-button">View Full Gallery</a>
+        </div>
+        </div>
+             </section>
+
+
+
+    
+
+    <section id="newsletter" class="section newsletter-section visible">
+        <div class="container">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to our newsletter for the latest updates on ECWA Glory Concert events and announcements.</p>
+            <form id="newsletter-form" action="{{ url_for('newsletter') }}" method="POST">
+                <input type="hidden" name="form_type" value="newsletter">
+                <div class="form-group">
+                    <input type="email" id="newsletter-email" name="email" placeholder="Enter your email" required>
+                </div>
+                <button type="submit" class="cta-button">Subscribe</button>
+            </form>
+        </div>
+    </section>
+<div class="live-service-container glass-card">
+        <div class="live-indicator">
+          <span class="live-dot"></span>
+          <span class="live-text">LIVE NOW</span>
+        </div>
+        <div class="service-player">
+          <iframe 
+            src="https://www.youtube.com/live/LMLp-aBI0BE?si=rmvAvbSet2T41nlT" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+          </div>
+            <div id="container" class="service-actions">
+            <a href="https://www.youtube.com/live/LMLp-aBI0BE?si=rmvAvbSet2T41nlT" class="cta-button">Watch Full Service</a>
+          </div>
+          </div>
+        </div>
+        </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+          <h3>ECWA Glory Concert</h3>
+          <p>ECWA's Largest Gospel Gathering.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="{{ url_for('about') }}">About the Concert</a></li>
+                    <li><a href="#convenor">Convenor</a></li>
+                    <li><a href="#ministers">Ministers</a></li>
+                    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                    <li><a href="{{ url_for('support') }}">Support</a></li>
+                    <li><a href="{{url_for('volunteer')}}">Volunteer</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>Email: info@ecwalagoswestdcc.com</p>
+                <div class="footer-social">
+                    <a href="https://web.facebook.com/ecwalwdcc" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/ecwalagoswestdcc" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@gloryconcert" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+                </div>
+      </div>
+      <div class="footer-bottom">
+         <p>&copy; 2026 ECWA Lagos West DCC. All rights reserved.</p>
+        <p>Made with ❤️ for God's Glory by <a style="color: azure;" href="https://bit.ly/HiveryTech">HiveryTech LTD</a></p>      </div>
+    </div>
+  </footer>
+         
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
