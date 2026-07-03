@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, g, session
 import sqlite3
 import os
 import smtplib
+import json
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
@@ -328,114 +329,130 @@ def admin():
             if is_ajax:
                 return jsonify({'status': 'ok', 'action': action, 'message': message or 'Success'})
             return redirect(url_for('admin'))
-        
-        if action == 'update_event':
-            title = request.form.get('title')
-            date = request.form.get('event_date')
-            file = request.files.get('flyer_image')
-            
-            event = db.execute('SELECT * FROM events ORDER BY id DESC LIMIT 1').fetchone()
-            flyer_filename = event['flyer_image'] if event else 'default.jpg'
-            
-            if file and file.filename != '':
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                flyer_filename = filename
-                
-            if event:
-                db.execute('UPDATE events SET title = ?, event_date = ?, flyer_image = ? WHERE id = ?', 
-                           (title, date, flyer_filename, event['id']))
-            else:
-                db.execute('INSERT INTO events (title, event_date, flyer_image) VALUES (?, ?, ?)', 
-                           (title, date, flyer_filename))
-            db.commit()
-            return admin_reply('Event updated')
-            
-        elif action == 'update_hero':
-            main_title = request.form.get('main_title')
-            subtitle = request.form.get('subtitle')
-            
-            hero = db.execute('SELECT * FROM hero LIMIT 1').fetchone()
-            if hero:
-                db.execute('UPDATE hero SET main_title = ?, subtitle = ? WHERE id = ?', 
-                           (main_title, subtitle, hero['id']))
-            db.commit()
-            return admin_reply('Hero updated')
-            
-        elif action == 'add_minister':
-            name = request.form.get('name')
-            role = request.form.get('role')
-            file = request.files.get('image')
-            image_filename = 'default.jpg'
-            
-            if file and file.filename != '':
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                image_filename = filename
-                
-            db.execute('INSERT INTO ministers (name, role, image) VALUES (?, ?, ?)', 
-                       (name, role, image_filename))
-            db.commit()
-            return admin_reply('Minister added')
-            
-        elif action == 'edit_minister':
-            minister_id = request.form.get('minister_id')
-            name = request.form.get('name')
-            role = request.form.get('role')
-            file = request.files.get('image')
-            
-            if file and file.filename != '':
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                db.execute('UPDATE ministers SET name = ?, role = ?, image = ? WHERE id = ?', 
-                           (name, role, filename, minister_id))
-            else:
-                db.execute('UPDATE ministers SET name = ?, role = ? WHERE id = ?', 
-                           (name, role, minister_id))
-            db.commit()
-            return admin_reply('Minister edited')
 
-        elif action == 'delete_minister':
-            minister_id = request.form.get('minister_id')
-            db.execute('DELETE FROM ministers WHERE id = ?', (minister_id,))
-            db.commit()
-            return admin_reply('Minister deleted')
-            
-        elif action == 'add_gallery':
-            files = request.files.getlist('images')
-            for file in files:
+        def admin_reply_error(message=None, status=400):
+            if is_ajax:
+                return jsonify({'status': 'error', 'action': action, 'message': message or 'Request failed'}), status
+            flash(message or 'Request failed')
+            return redirect(url_for('admin'))
+
+        if not action:
+            return admin_reply_error('Missing action value', 400)
+
+        try:
+            if action == 'update_event':
+                title = request.form.get('title')
+                date = request.form.get('event_date')
+                file = request.files.get('flyer_image')
+                
+                event = db.execute('SELECT * FROM events ORDER BY id DESC LIMIT 1').fetchone()
+                flyer_filename = event['flyer_image'] if event else 'default.jpg'
+                
                 if file and file.filename != '':
                     filename = secure_filename(file.filename)
-                    gallery_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'Gallery')
-                    os.makedirs(gallery_dir, exist_ok=True)
-                    file.save(os.path.join(gallery_dir, filename))
-                    db.execute('INSERT INTO gallery (image_path) VALUES (?)', ('Gallery/' + filename,))
-            db.commit()
-            return admin_reply('Gallery images added')
-            
-        elif action == 'delete_gallery':
-            image_id = request.form.get('image_id')
-            db.execute('DELETE FROM gallery WHERE id = ?', (image_id,))
-            db.commit()
-            return admin_reply('Gallery image deleted')
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    flyer_filename = filename
+                    
+                if event:
+                    db.execute('UPDATE events SET title = ?, event_date = ?, flyer_image = ? WHERE id = ?', 
+                               (title, date, flyer_filename, event['id']))
+                else:
+                    db.execute('INSERT INTO events (title, event_date, flyer_image) VALUES (?, ?, ?)', 
+                               (title, date, flyer_filename))
+                db.commit()
+                return admin_reply('Event updated')
 
-        elif action == 'delete_contact':
-            contact_id = request.form.get('contact_id')
-            db.execute('DELETE FROM contact_messages WHERE id = ?', (contact_id,))
-            db.commit()
-            return admin_reply('Contact deleted')
+            elif action == 'update_hero':
+                main_title = request.form.get('main_title')
+                subtitle = request.form.get('subtitle')
+                
+                hero = db.execute('SELECT * FROM hero LIMIT 1').fetchone()
+                if hero:
+                    db.execute('UPDATE hero SET main_title = ?, subtitle = ? WHERE id = ?', 
+                               (main_title, subtitle, hero['id']))
+                else:
+                    db.execute('INSERT INTO hero (main_title, subtitle, media_path) VALUES (?, ?, ?)',
+                               (main_title, subtitle, ''))
+                db.commit()
+                return admin_reply('Hero updated')
 
-        elif action == 'delete_volunteer':
-            volunteer_id = request.form.get('volunteer_id')
-            db.execute('DELETE FROM volunteer_applications WHERE id = ?', (volunteer_id,))
-            db.commit()
-            return admin_reply('Volunteer deleted')
+            elif action == 'add_minister':
+                name = request.form.get('name')
+                role = request.form.get('role')
+                file = request.files.get('image')
+                image_filename = 'default.jpg'
+                
+                if file and file.filename != '':
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    image_filename = filename
+                    
+                db.execute('INSERT INTO ministers (name, role, image) VALUES (?, ?, ?)', 
+                           (name, role, image_filename))
+                db.commit()
+                return admin_reply('Minister added')
+                
+            elif action == 'edit_minister':
+                minister_id = request.form.get('minister_id')
+                name = request.form.get('name')
+                role = request.form.get('role')
+                file = request.files.get('image')
+                
+                if file and file.filename != '':
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    db.execute('UPDATE ministers SET name = ?, role = ?, image = ? WHERE id = ?', 
+                               (name, role, filename, minister_id))
+                else:
+                    db.execute('UPDATE ministers SET name = ?, role = ? WHERE id = ?', 
+                               (name, role, minister_id))
+                db.commit()
+                return admin_reply('Minister edited')
 
-        elif action == 'delete_newsletter':
-            subscriber_id = request.form.get('subscriber_id')
-            db.execute('DELETE FROM newsletter_subscribers WHERE id = ?', (subscriber_id,))
-            db.commit()
-            return admin_reply('Subscriber deleted')
+            elif action == 'delete_minister':
+                minister_id = request.form.get('minister_id')
+                db.execute('DELETE FROM ministers WHERE id = ?', (minister_id,))
+                db.commit()
+                return admin_reply('Minister deleted')
+                
+            elif action == 'add_gallery':
+                files = request.files.getlist('images')
+                for file in files:
+                    if file and file.filename != '':
+                        filename = secure_filename(file.filename)
+                        gallery_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'Gallery')
+                        os.makedirs(gallery_dir, exist_ok=True)
+                        file.save(os.path.join(gallery_dir, filename))
+                        db.execute('INSERT INTO gallery (image_path) VALUES (?)', ('Gallery/' + filename,))
+                db.commit()
+                return admin_reply('Gallery images added')
+                
+            elif action == 'delete_gallery':
+                image_id = request.form.get('image_id')
+                db.execute('DELETE FROM gallery WHERE id = ?', (image_id,))
+                db.commit()
+                return admin_reply('Gallery image deleted')
+
+            elif action == 'delete_contact':
+                contact_id = request.form.get('contact_id')
+                db.execute('DELETE FROM contact_messages WHERE id = ?', (contact_id,))
+                db.commit()
+                return admin_reply('Contact deleted')
+
+            elif action == 'delete_volunteer':
+                volunteer_id = request.form.get('volunteer_id')
+                db.execute('DELETE FROM volunteer_applications WHERE id = ?', (volunteer_id,))
+                db.commit()
+                return admin_reply('Volunteer deleted')
+
+            elif action == 'delete_newsletter':
+                subscriber_id = request.form.get('subscriber_id')
+                db.execute('DELETE FROM newsletter_subscribers WHERE id = ?', (subscriber_id,))
+                db.commit()
+                return admin_reply('Subscriber deleted')
+        except Exception as exc:
+            app.logger.exception('Admin action failed')
+            return admin_reply_error(str(exc), 500)
 
     # Fetch current data for the admin dashboard
     hero = db.execute('SELECT * FROM hero LIMIT 1').fetchone()
@@ -448,6 +465,12 @@ def admin():
     volunteer_applications = db.execute('SELECT * FROM volunteer_applications ORDER BY id DESC').fetchall()
     newsletter_subscribers = db.execute('SELECT * FROM newsletter_subscribers ORDER BY id DESC').fetchall()
     
+    submission_counts_json = json.dumps({
+        'volunteers': len(volunteer_applications),
+        'contacts': len(contact_messages),
+        'newsletter': len(newsletter_subscribers)
+    })
+    
     return render_template('admin.html', 
                            hero=hero, 
                            upcoming_event=upcoming_event, 
@@ -455,7 +478,8 @@ def admin():
                            gallery_images=gallery_images,
                            contact_messages=contact_messages,
                            volunteer_applications=volunteer_applications,
-                           newsletter_subscribers=newsletter_subscribers)
+                           newsletter_subscribers=newsletter_subscribers,
+                           submission_counts_json=submission_counts_json)
 
 
 @app.route('/admin/submission-summary')

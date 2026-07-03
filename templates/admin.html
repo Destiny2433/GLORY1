@@ -57,6 +57,7 @@
             font-family: 'Orbitron', sans-serif; 
             margin: 0;
             background: linear-gradient(to right, #60a5fa, #c084fc);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -265,6 +266,7 @@
         .btn-small {
             padding: 6px 12px;
             font-size: 0.85rem;
+            min-width: 0;
         }
 
         .grid-container { 
@@ -326,9 +328,11 @@
         .card-actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .card-actions button {
             flex: 1;
+            min-width: 120px;
         }
 
         /* Modal styles */
@@ -354,6 +358,50 @@
             width: 90%;
             max-width: 500px;
             position: relative;
+        }
+
+        @media (max-width: 820px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+            .nav-links {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .admin-section {
+                padding: 22px;
+            }
+            .admin-section h2 {
+                font-size: 1.2rem;
+            }
+            .admin-section form > div {
+                flex-direction: column;
+            }
+            .form-group {
+                width: 100%;
+            }
+            button, .btn-small {
+                width: 100%;
+            }
+            .card-actions {
+                flex-direction: column;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .admin-section table {
+                min-width: 0;
+                font-size: 0.95rem;
+            }
+            .modal-content {
+                padding: 24px;
+            }
         }
 
         .close-btn {
@@ -455,7 +503,7 @@
                                 <p class="card-subtitle">{{ minister.role }}</p>
                             </div>
                             <div class="card-actions">
-<button type="button" class="btn-small" onclick="openEditMinisterModal('{{ minister.id }}', {{ minister.name|tojson|safe }}, {{ minister.role|tojson|safe }})"><i class="fas fa-edit"></i> Edit</button>
+                                <button type="button" class="btn-small edit-minister-btn" data-id="{{ minister.id }}" data-name="{{ minister.name|e }}" data-role="{{ minister.role|e }}"><i class="fas fa-edit"></i> Edit</button>
                                 <form action="{{ url_for('admin') }}" method="POST" style="margin: 0; flex: 1; display: flex;">
                                     <input type="hidden" name="action" value="delete_minister">
                                     <input type="hidden" name="minister_id" value="{{ minister.id }}">
@@ -697,11 +745,7 @@
             });
         }
 
-        const submissionCounts = {
-            volunteers: {{ volunteer_applications|length }},
-            contacts: {{ contact_messages|length }},
-            newsletter: {{ newsletter_subscribers|length }}
-        };
+        const submissionCounts = JSON.parse('{{ submission_counts_json|safe }}');
 
         let badgeTotal = 0;
 
@@ -746,8 +790,8 @@
             }
             const notification = new Notification(title, {
                 body,
-                icon: '{{ url_for('static', filename='images/logo.png') }}',
-                badge: '{{ url_for('static', filename='images/logo.png') }}'
+                icon: "{{ url_for('static', filename='images/logo.png') }}",
+                badge: "{{ url_for('static', filename='images/logo.png') }}"
             });
             notification.onclick = () => {
                 window.focus();
@@ -755,7 +799,7 @@
         }
 
         function pollSubmissionUpdates() {
-            fetch('{{ url_for('admin_submission_summary') }}', { credentials: 'same-origin' })
+            fetch("{{ url_for('admin_submission_summary') }}", { credentials: 'same-origin' })
                 .then(response => response.json())
                 .then(data => {
                     let hasChanges = false;
@@ -839,6 +883,15 @@
             });
         }
 
+        function attachEditMinisterButtons() {
+            const buttons = document.querySelectorAll('.edit-minister-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    openEditMinisterModal(btn.dataset.id, btn.dataset.name, btn.dataset.role);
+                });
+            });
+        }
+
         window.addEventListener('load', () => {
             switchSubmissionTab('volunteers');
             registerServiceWorker();
@@ -846,6 +899,7 @@
             pollSubmissionUpdates();
             setInterval(pollSubmissionUpdates, 5000);
             attachAdminAjax();
+            attachEditMinisterButtons();
         });
     </script>
 </body>
