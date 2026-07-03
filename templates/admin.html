@@ -873,11 +873,24 @@
                         body: fd,
                         headers: { 'X-Requested-With': 'XMLHttpRequest' },
                         credentials: 'same-origin'
-                    }).then(r => r.json()).then(data => {
+                    })
+                    .then(r => {
+                        if (!r.ok) {
+                            return r.text().then(text => {
+                                throw new Error(text || `HTTP ${r.status}`);
+                            });
+                        }
+                        return r.json();
+                    })
+                    .then(data => {
+                        if (data && data.status === 'error') {
+                            throw new Error(data.message || 'Request failed');
+                        }
                         showToast(data.message || 'Saved');
-                    }).catch(err => {
+                    })
+                    .catch(err => {
                         console.error('Admin form submit failed', err);
-                        showToast('Request failed');
+                        showToast(err.message || 'Request failed');
                     });
                 });
             });

@@ -450,6 +450,8 @@ def admin():
                 db.execute('DELETE FROM newsletter_subscribers WHERE id = ?', (subscriber_id,))
                 db.commit()
                 return admin_reply('Subscriber deleted')
+            else:
+                return admin_reply_error(f'Unknown action: {action}', 400)
         except Exception as exc:
             app.logger.exception('Admin action failed')
             return admin_reply_error(str(exc), 500)
