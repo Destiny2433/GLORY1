@@ -103,6 +103,19 @@
             color: var(--danger-hover);
         }
 
+        .flash-container {
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            padding: 14px 18px;
+            border-radius: 12px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -429,6 +442,16 @@
             </div>
         </div>
 
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
         <div class="dashboard-grid">
             
             <div class="admin-section">
@@ -745,157 +768,6 @@
             });
         }
 
-        const submissionCounts = JSON.parse('{{ submission_counts_json|safe }}');
-
-        let badgeTotal = 0;
-
-        function updateBadge(n) {
-            const el = document.getElementById('submission-badge');
-            if (!el) return;
-            if (n && n > 0) {
-                el.style.display = 'inline-block';
-                el.textContent = n;
-            } else {
-                el.style.display = 'none';
-                el.textContent = '0';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const el = document.getElementById('submission-badge');
-            if (el) {
-                el.addEventListener('click', () => {
-                    badgeTotal = 0;
-                    updateBadge(0);
-                });
-            }
-            updateBadge(0);
-        });
-
-        function requestNotificationPermission() {
-            if (!('Notification' in window)) {
-                console.warn('Browser does not support notifications.');
-                return;
-            }
-            if (Notification.permission === 'default') {
-                Notification.requestPermission().then(permission => {
-                    console.log('Notification permission:', permission);
-                });
-            }
-        }
-
-        function notifyAdmin(title, body) {
-            if (!('Notification' in window) || Notification.permission !== 'granted') {
-                return;
-            }
-            const notification = new Notification(title, {
-                body,
-                icon: "{{ url_for('static', filename='images/logo.png') }}",
-                badge: "{{ url_for('static', filename='images/logo.png') }}"
-            });
-            notification.onclick = () => {
-                window.focus();
-            };
-        }
-
-        function pollSubmissionUpdates() {
-            fetch("{{ url_for('admin_submission_summary') }}", { credentials: 'same-origin' })
-                .then(response => response.json())
-                .then(data => {
-                    let hasChanges = false;
-                    if (data.volunteer_applications > submissionCounts.volunteers) {
-                        notifyAdmin('New Volunteer Application', `You have ${data.volunteer_applications - submissionCounts.volunteers} new volunteer application(s).`);
-                        hasChanges = true;
-                    }
-                    if (data.contact_messages > submissionCounts.contacts) {
-                        notifyAdmin('New Contact Message', `You have ${data.contact_messages - submissionCounts.contacts} new contact message(s).`);
-                        hasChanges = true;
-                    }
-                    if (data.newsletter_subscribers > submissionCounts.newsletter) {
-                        notifyAdmin('New Newsletter Signup', `You have ${data.newsletter_subscribers - submissionCounts.newsletter} new subscriber(s).`);
-                        hasChanges = true;
-                    }
-                    if (hasChanges) {
-                        let diff = (data.volunteer_applications - submissionCounts.volunteers) + (data.contact_messages - submissionCounts.contacts) + (data.newsletter_subscribers - submissionCounts.newsletter);
-                        badgeTotal += diff;
-                        updateBadge(badgeTotal);
-                        setTimeout(() => location.reload(), 1500);
-                    }
-
-                    submissionCounts.volunteers = data.volunteer_applications;
-                    submissionCounts.contacts = data.contact_messages;
-                    submissionCounts.newsletter = data.newsletter_subscribers;
-                })
-                .catch(err => console.warn('Notification poll failed:', err));
-        }
-
-        function registerServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registered:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.warn('Service Worker registration failed:', error);
-                    });
-            }
-        }
-
-        function showToast(message) {
-            let t = document.getElementById('admin-toast');
-            if (!t) {
-                t = document.createElement('div');
-                t.id = 'admin-toast';
-                t.style.position = 'fixed';
-                t.style.right = '20px';
-                t.style.bottom = '20px';
-                t.style.background = 'rgba(0,0,0,0.8)';
-                t.style.color = '#fff';
-                t.style.padding = '12px 18px';
-                t.style.borderRadius = '8px';
-                t.style.boxShadow = '0 8px 20px rgba(0,0,0,0.5)';
-                t.style.zIndex = 2000;
-                document.body.appendChild(t);
-            }
-            t.textContent = message;
-            t.style.opacity = '1';
-            setTimeout(() => { t.style.opacity = '0'; }, 3000);
-        }
-
-        function attachAdminAjax() {
-            const adminForms = document.querySelectorAll('.admin-section form');
-            adminForms.forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const fd = new FormData(form);
-                    fetch(form.action || window.location.pathname, {
-                        method: form.method || 'POST',
-                        body: fd,
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                        credentials: 'same-origin'
-                    })
-                    .then(r => {
-                        if (!r.ok) {
-                            return r.text().then(text => {
-                                throw new Error(text || `HTTP ${r.status}`);
-                            });
-                        }
-                        return r.json();
-                    })
-                    .then(data => {
-                        if (data && data.status === 'error') {
-                            throw new Error(data.message || 'Request failed');
-                        }
-                        showToast(data.message || 'Saved');
-                    })
-                    .catch(err => {
-                        console.error('Admin form submit failed', err);
-                        showToast(err.message || 'Request failed');
-                    });
-                });
-            });
-        }
-
         function attachEditMinisterButtons() {
             const buttons = document.querySelectorAll('.edit-minister-btn');
             buttons.forEach(btn => {
@@ -905,13 +777,8 @@
             });
         }
 
-        window.addEventListener('load', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             switchSubmissionTab('volunteers');
-            registerServiceWorker();
-            requestNotificationPermission();
-            pollSubmissionUpdates();
-            setInterval(pollSubmissionUpdates, 5000);
-            attachAdminAjax();
             attachEditMinisterButtons();
         });
     </script>

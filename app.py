@@ -12,7 +12,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['DATABASE'] = os.path.join(app.root_path, 'database.db')
-app.config['UPLOAD_FOLDER'] = 'static/images'
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images')
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'super_secret_key')  # production should set this
 
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'glory123')
@@ -328,6 +328,8 @@ def admin():
         def admin_reply(message=None):
             if is_ajax:
                 return jsonify({'status': 'ok', 'action': action, 'message': message or 'Success'})
+            if message:
+                flash(message)
             return redirect(url_for('admin'))
 
         def admin_reply_error(message=None, status=400):
