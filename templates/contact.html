@@ -58,15 +58,24 @@
         }
         @media (max-width: 900px) {
             .contact-section { padding: 70px 18px 80px; }
-            .contact-wrapper { gap: 40px; }
+            .contact-wrapper { grid-template-columns: 1fr; gap: 32px; }
+            .contact-info { order: 2; }
+            .contact-form-card { order: 1; }
         }
         @media (max-width: 640px) {
-            .contact-hero { padding: 80px 16px 50px; }
-            .contact-section { padding: 50px 16px 60px; }
-            .contact-form-card { padding: 28px 22px; }
-            .info-card { padding: 18px 20px; }
+            .contact-hero { padding: 90px 16px 46px; }
+            .contact-section { padding: 46px 16px 56px; }
+            .contact-wrapper { gap: 24px; }
+            .contact-form-card { padding: 24px 18px; }
+            .info-card { padding: 16px 18px; }
+            .social-icons-row { flex-wrap: wrap; }
+            .submit-btn { padding: 12px 20px; }
         }
-        @media (max-width: 500px) { .form-row-2 { grid-template-columns: 1fr; } }
+        @media (max-width: 500px) {
+            .form-row-2 { grid-template-columns: 1fr; }
+            .contact-hero h1 { font-size: 2.2rem; }
+            .contact-hero p { font-size: 1rem; }
+        }
 
         /* Info cards */
         .contact-info h2 {
@@ -242,7 +251,7 @@
             <ul class="nav-menu">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('about') }}">About</a></li>
-                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('gallery_page') }}">Gallery</a></li>
                 <li><a href="{{ url_for('support') }}">Support</a></li>
                 <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
                 <li><a href="{{ url_for('contact') }}" class="active">Contact</a></li>
@@ -356,7 +365,7 @@
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="{{ url_for('about') }}">About the Concert</a></li>
-                    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                    <li><a href="{{ url_for('gallery_page') }}">Gallery</a></li>
                     <li><a href="{{ url_for('support') }}">Support</a></li>
                     <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>

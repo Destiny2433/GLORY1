@@ -52,7 +52,7 @@
             <ul class="nav-menu">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                <li><a href="{{ url_for('gallery_page') }}">Gallery</a></li>
                 <li><a href="{{ url_for('support') }}">Support</a></li>
                 <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
                 <li><a href="{{ url_for('contact') }}">Contact</a></li>
@@ -62,7 +62,7 @@
 
 
 
-    <section id="volunteer-form" class="section fade-in visible">
+<section id="volunteer-section" class="section fade-in visible">
         <div class="container">
             <h2>
                 
@@ -70,7 +70,7 @@
                 Join Our Volunteer Team</h2>
             <p>Help make the ECWA Glory Concert a success! Select your preferred team below and we'll get back to you with more details.</p>
 
-            <form id="volunteer-form" action="{{ url_for('volunteer') }}" method="POST">
+<form id="volunteer-app-form" action="{{ url_for('volunteer') }}" method="POST">
                 <input type="hidden" name="form_type" value="volunteer">
                 <div class="form-row">
                     <div class="form-group">
@@ -90,7 +90,7 @@
                     </div>
                     <div class="form-group">
                         <label for="age">Age</label>
-                        <input type="number" id="age" name="age" min="18" max="100">
+                        <input type="number" id="age" name="age" max="100">
                     </div>
                 </div>
 
@@ -129,7 +129,7 @@
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="{{ url_for('about') }}">About the Concert</a></li>
-                    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                    <li><a href="{{ url_for('gallery_page') }}">Gallery</a></li>
                     <li><a href="{{ url_for('support') }}">Support</a></li>
                     <li><a href="{{ url_for('volunteer') }}">Volunteer</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>

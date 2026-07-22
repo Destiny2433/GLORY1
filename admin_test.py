@@ -76,7 +76,8 @@ with app.test_client() as c:
     resp = c.post('/admin', data={'action': 'delete_newsletter', 'subscriber_id': '1'}, follow_redirects=True)
     results.append(('delete_newsletter', resp.status_code, b'Subscriber deleted' in resp.data, resp.data[:200].decode('utf-8', errors='replace')))
 
-with open('admin_test_results.txt', 'w', encoding='utf-8') as out:
+OUTPUT_PATH = os.path.join(app.root_path, 'admin_test_results.txt')
+with open(OUTPUT_PATH, 'w', encoding='utf-8') as out:
     for item in results:
         out.write(str(item) + '\n')
-print('DONE')
+print('DONE, wrote', OUTPUT_PATH)
