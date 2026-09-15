@@ -2,3 +2,4 @@ Flask
 Werkzeug
 python-dotenv
 pywebpush
+gunicorn
