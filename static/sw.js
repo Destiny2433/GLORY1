@@ -9,6 +9,16 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(fetch(event.request));
+self.addEventListener('push', event => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (error) {
+    data = { body: 'There is a new Glory Concert update.' };
+  }
+  event.waitUntil(self.registration.showNotification(data.title || 'GLORY update', { body: data.body || 'There is a new Glory Concert update.', icon: '/static/images/logo.png', badge: '/static/images/logo.png', data: { url: data.url || '/' } }));
+});
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(clients.openWindow(event.notification.data.url || '/'));
 });

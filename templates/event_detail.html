@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - ECWA GLORY CONCERT</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ event.title }} | ECWA Glory Concert</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
             <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
             <ul class="site-menu">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('events') }}">Programme</a></li>
+                <li><a class="active" href="{{ url_for('events') }}">Programme</a></li>
                 <li><a href="{{ url_for('about') }}">Our story</a></li>
                 <li><a href="{{ url_for('gallery_page') }}">Gallery</a></li>
                 <li><a href="{{ url_for('contact') }}">Contact</a></li>
@@ -26,12 +26,21 @@
         </div>
     </nav>
 
-    <main class="thank-you-page" data-aos="fade-up">
-        <div class="container thank-you-card">
-            <p class="eyebrow">Thank you</p>
-            <h1>We have received your message.</h1>
-            <p>{{ message }}</p>
-            <a href="{{ url_for('index') }}" class="button button-gold">Return to home</a>
+    <main class="event-detail-page" data-aos="fade-up">
+        <div class="container event-detail-shell">
+            <div class="event-detail-copy">
+                <p class="eyebrow">Event spotlight</p>
+                <h1>{{ event.title }}</h1>
+                <p class="event-detail-type">{{ event.event_type|title }}{% if event.day_label %} · {{ event.day_label }}{% endif %}</p>
+                <div class="event-meta-list">
+                    <p><strong>Date:</strong> {{ event.event_date }}</p>
+                    {% if event.start_time %}<p><strong>Time:</strong> {{ event.start_time }}{% if event.end_time %} - {{ event.end_time }}{% endif %}</p>{% endif %}
+                    {% if event.venue %}<p><strong>Venue:</strong> {{ event.venue }}</p>{% endif %}
+                </div>
+                {% if event.description %}<p class="event-description">{{ event.description }}</p>{% endif %}
+                {% if event.registration_enabled %}<a class="button button-gold" href="{{ url_for('contact') }}">Register your interest</a>{% endif %}
+                <a class="text-link" href="{{ url_for('events') }}">Back to all events <span>&rarr;</span></a>
+            </div>
         </div>
     </main>
 

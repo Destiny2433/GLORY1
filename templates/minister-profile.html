@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - ECWA GLORY CONCERT</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Learn more about {{ minister.name }}, {{ minister.role }}, ministering at ECWA Glory Concert.">
+    <title>{{ minister.name }} | ECWA Glory Concert</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,15 +27,17 @@
         </div>
     </nav>
 
-    <main class="thank-you-page" data-aos="fade-up">
-        <div class="container thank-you-card">
-            <p class="eyebrow">Thank you</p>
-            <h1>We have received your message.</h1>
-            <p>{{ message }}</p>
-            <a href="{{ url_for('index') }}" class="button button-gold">Return to home</a>
+    <main class="minister-profile-page" data-aos="fade-up">
+        <div class="minister-profile-image"><img src="{{ url_for('static', filename='images/' ~ minister.image) }}" alt="{{ minister.name }}"></div>
+        <div class="minister-profile-copy">
+            <p class="minister-profile-role">{{ minister.role }}</p>
+            <h1>{{ minister.name }}</h1>
+            <div class="minister-profile-bio">{{ minister.bio or 'More information about this worship leader will be shared soon.' }}</div>
+            <a class="button button-gold" href="{{ url_for('index') }}">Back to home</a>
         </div>
     </main>
 
+    <footer class="simple-footer"><p>&copy; 2026 ECWA Lagos West DCC</p></footer>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 700, once: true, easing: 'ease-out-cubic' });</script>

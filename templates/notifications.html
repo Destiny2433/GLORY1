@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stay Updated | ECWA Glory Concert</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+</head>
+<body class="clean-page" data-vapid-public-key="{{ vapid_public_key }}">
+    <nav class="site-nav">
+        <div class="site-nav-inner">
+            <a class="site-brand" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA logo"><span>GLORY<small>CONCERT</small></span></a>
+            <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+            <ul class="site-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('events') }}">Programme</a></li>
+                <li><a href="{{ url_for('about') }}">Our story</a></li>
+                <li><a href="{{ url_for('gallery_page') }}">Gallery</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a class="nav-cta" href="{{ url_for('volunteer') }}">Join the team</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="section visible notification-page">
+        <div class="container notification-card" data-aos="fade-up">
+            <p class="eyebrow">Stay connected</p>
+            <h1>Receive fresh updates</h1>
+            <p>Get notified when a new Glory event is published, when a service is updated, or when a major announcement is shared. Subscription is optional and can be switched off anytime.</p>
+            <button id="enable-notifications" class="button button-gold" type="button">Enable notifications</button>
+            <p id="notification-status" role="status" aria-live="polite"></p>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 700, once: true, easing: 'ease-out-cubic' });
+        const button = document.getElementById('enable-notifications');
+        const status = document.getElementById('notification-status');
+        function urlBase64ToUint8Array(value) {
+            const padding = '='.repeat((4 - value.length % 4) % 4);
+            const base64 = (value + padding).replace(/-/g, '+').replace(/_/g, '/');
+            return Uint8Array.from(atob(base64), character => character.charCodeAt(0));
+        }
+        button.addEventListener('click', async () => {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) { status.textContent = 'Push notifications are not supported by this browser.'; return; }
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') { status.textContent = 'Notifications were not enabled.'; return; }
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            const publicKey = document.body.dataset.vapidPublicKey;
+            if (!publicKey) { status.textContent = 'Notifications are not configured yet.'; return; }
+            const subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(publicKey) });
+            const response = await fetch('{{ url_for("subscribe_push") }}', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...subscription.toJSON(), audience: 'visitor' }) });
+            status.textContent = response.ok ? 'Notifications enabled successfully.' : 'We could not save your subscription. Please try again.';
+        });
+    </script>
+</body>
+</html>

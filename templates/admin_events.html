@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Manage Events | ECWA Glory</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><main class="section visible"><div class="container">
+<p><a href="{{ url_for('admin') }}">Back to dashboard</a></p><h1>Manage Events</h1>
+{% with messages = get_flashed_messages() %}{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}{% endwith %}
+<form action="{{ url_for('admin_events') }}" method="post" class="event-details">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="create">
+<label>Title<input name="title" required></label><label>Event type<select name="event_type"><option value="main">Main event</option><option value="sub-event">Sub-event</option><option value="vigil">Vigil</option><option value="concert">Concert</option></select></label><label>Edition year<input name="edition_year" type="number" min="2020" max="2100"></label><label>Month<input name="month"></label><label>Day label<input name="day_label" placeholder="Friday"></label><label>Date<input name="event_date" required type="date"></label><label>Start time<input name="start_time" type="time"></label><label>End time<input name="end_time" type="time"></label><label>Venue<input name="venue"></label><label>Description<textarea name="description" rows="4"></textarea></label><label><input name="registration_enabled" type="checkbox"> Enable registration</label><label><input name="is_published" type="checkbox"> Publish now</label><button class="cta-button" type="submit">Create event</button>
+</form>
+<section><h2>Existing events</h2>{% for event in events %}<article class="event-details"><h3>{{ event.title }}</h3><p>{{ event.event_date }} · {{ event.event_type }} · {% if event.is_published %}Published{% else %}Draft{% endif %}</p><form action="{{ url_for('admin_events') }}" method="post"><input type="hidden" name="_csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="delete"><input type="hidden" name="event_id" value="{{ event.id }}"><button type="submit">Delete</button></form></article>{% else %}<p>No events created yet.</p>{% endfor %}</section>
+</div></main></body></html>

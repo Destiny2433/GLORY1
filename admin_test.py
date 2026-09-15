@@ -2,6 +2,7 @@ import os
 import tempfile
 import sqlite3
 import io
+import os
 from app import app
 
 app.config['TESTING'] = True
@@ -15,13 +16,13 @@ except OSError:
 
 results = []
 with app.test_client() as c:
-    resp = c.post('/login', data={'password': 'glory123'}, follow_redirects=True)
+    resp = c.post('/login', data={'password': os.environ.get('ADMIN_PASSWORD', '')}, follow_redirects=True)
     results.append(('login', resp.status_code, b'Admin Dashboard' in resp.data, resp.data[:200].decode('utf-8', errors='replace')))
 
-    resp = c.post('/admin', data={'action': 'update_hero', 'main_title': 'Test Hero', 'subtitle': 'Test Subtitle'}, follow_redirects=True)
+    resp = c.post('/admin', data={'admin_action': 'update_hero', 'main_title': 'Test Hero', 'subtitle': 'Test Subtitle'}, follow_redirects=True)
     results.append(('update_hero', resp.status_code, b'Hero updated' in resp.data, resp.data[:200].decode('utf-8', errors='replace')))
 
-    resp = c.post('/admin', data={'action': 'update_event', 'title': 'Test Event', 'event_date': 'Tomorrow'}, follow_redirects=True)
+    resp = c.post('/admin', data={'admin_action': 'update_event', 'title': 'Test Event', 'event_date': 'Tomorrow'}, follow_redirects=True)
     results.append(('update_event', resp.status_code, b'Event updated' in resp.data, resp.data[:200].decode('utf-8', errors='replace')))
 
     data = {'action': 'add_minister', 'name': 'John Doe', 'role': 'Pastor'}

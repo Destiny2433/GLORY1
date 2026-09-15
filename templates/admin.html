@@ -260,12 +260,15 @@
         }
     </style>
 </head>
-<body>
+<body data-vapid-public-key="{{ vapid_public_key }}">
     <div class="admin-container">
         <div class="header">
             <h1><i class="fas fa-cogs"></i> Admin Panel</h1>
             <div class="nav-links">
+                <button type="button" id="enable-admin-notifications">Enable notifications</button>
                 <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('admin_events') }}"><i class="fas fa-calendar"></i> Events</a>
+                <a href="{{ url_for('admin_gallery') }}"><i class="fas fa-images"></i> Gallery</a>
                 <a href="{{ url_for('logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
@@ -280,6 +283,7 @@
             <div class="admin-section">
                 <h2>Hero Section</h2>
                 <form action="{{ url_for('admin') }}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="admin_action" value="update_hero">
                     <div class="form-group">
                         <label>Main Title</label>
@@ -300,6 +304,7 @@
             <div class="admin-section">
                 <h2>Upcoming Event</h2>
                 <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="admin_action" value="update_event">
                     <div class="form-group">
                         <label>Event Title</label>
@@ -317,12 +322,38 @@
                 </form>
             </div>
 
+            <div class="admin-section">
+                <h2>Send a Notification</h2>
+                <form action="{{ url_for('admin') }}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="admin_action" value="send_broadcast_notification">
+                    <div class="form-group">
+                        <label>Notification title</label>
+                        <input type="text" name="notification_title" placeholder="New service update" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="notification_message" rows="4" placeholder="Share the update that should go to all subscribed users." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Audience</label>
+                        <select name="notification_audience">
+                            <option value="visitor">Subscribers</option>
+                            <option value="admin">Admin audience</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-accent">Send push</button>
+                </form>
+            </div>
+
             <div class="admin-section full-width">
                 <h2>Ministers</h2>
                 <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data" class="minister-form-grid">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="admin_action" value="add_minister">
                     <div class="form-group" style="margin:0"><label>Name</label><input type="text" name="name" required></div>
                     <div class="form-group" style="margin:0"><label>Role</label><input type="text" name="role" required></div>
+                    <div class="form-group" style="margin:0"><label>Biography</label><textarea name="bio" rows="3" placeholder="Minister biography"></textarea></div>
                     <div class="form-group" style="margin:0"><label>Image</label><input type="file" name="image" required></div>
                     <button type="submit" class="btn-accent">Add</button>
                 </form>
@@ -335,8 +366,9 @@
                             <h3>{{ m.name }}</h3>
                             <p>{{ m.role }}</p>
                             <div class="card-actions">
-<button type="button" onclick="openEdit('{{ m.id }}', '{{ m.name|replace("'", "\\'") }}', '{{ m.role|replace("'", "\\'") }}')" style="padding: 5px 10px; font-size: 0.8rem;">Edit</button>
+<button type="button" onclick="openEdit({{ m.id }}, {{ m.name|tojson }}, {{ m.role|tojson }}, {{ (m.bio or '')|tojson }})" style="padding: 5px 10px; font-size: 0.8rem;">Edit</button>
                                 <form action="{{ url_for('admin') }}" method="POST" onsubmit="return confirm('Delete?')">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="admin_action" value="delete_minister">
                                     <input type="hidden" name="minister_id" value="{{ m.id }}">
                                     <button type="submit" class="btn-danger" style="padding: 5px 10px; font-size: 0.8rem;"><i class="fas fa-trash"></i></button>
@@ -348,9 +380,11 @@
                 </div>
             </div>
 
-            <div class="admin-section full-width">
-                <h2>Gallery</h2>
+            <details class="admin-section full-width gallery-section">
+                <summary><span><i class="fas fa-images"></i> Gallery</span><small>Tap to manage gallery photos</small></summary>
+                <div class="gallery-panel">
                 <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 20px;">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="admin_action" value="add_gallery">
                     <input type="file" name="images" multiple required style="width: auto;">
                     <button type="submit" class="btn-accent">Upload Photos</button>
@@ -360,6 +394,7 @@
                     <div class="card">
                         <img src="{{ url_for('static', filename='images/' ~ img.image_path) }}">
                         <form action="{{ url_for('admin') }}" method="POST" style="padding: 10px;">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="admin_action" value="delete_gallery">
                             <input type="hidden" name="image_id" value="{{ img.id }}">
                             <button type="submit" class="btn-danger" style="width: 100%;">Delete</button>
@@ -367,7 +402,8 @@
                     </div>
                     {% endfor %}
                 </div>
-            </div>
+                </div>
+            </details>
 
             <div class="admin-section full-width">
                 <h2>Submissions</h2>
@@ -392,8 +428,10 @@
                                 <span class="submission-badge">Volunteer</span>
                             </div>
                             <p><i class="fas fa-users"></i> Team: {{ v.team }}</p>
+                            <div class="submission-actions"><a href="{{ url_for('volunteer_detail', volunteer_id=v.id) }}">View full submission</a></div>
                             <div class="submission-actions">
                                 <form action="{{ url_for('admin') }}" method="POST">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="admin_action" value="delete_volunteer">
                                     <input type="hidden" name="volunteer_id" value="{{ v.id }}">
                                     <button type="submit" class="btn-danger">Delete</button>
@@ -422,6 +460,7 @@
                             <div class="submission-message">{{ c.message }}</div>
                             <div class="submission-actions">
                                 <form action="{{ url_for('admin') }}" method="POST">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="admin_action" value="delete_contact">
                                     <input type="hidden" name="contact_id" value="{{ c.id }}">
                                     <button type="submit" class="btn-danger">Delete</button>
@@ -447,6 +486,7 @@
                             </div>
                             <div class="submission-actions">
                                 <form action="{{ url_for('admin') }}" method="POST">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="admin_action" value="delete_newsletter">
                                     <input type="hidden" name="subscriber_id" value="{{ n.id }}">
                                     <button type="submit" class="btn-danger">Delete</button>
@@ -466,10 +506,12 @@
         <div class="modal-content">
             <h2>Edit Minister</h2>
             <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="admin_action" value="edit_minister">
                 <input type="hidden" name="minister_id" id="edit_id">
                 <div class="form-group"><label>Name</label><input type="text" name="name" id="edit_name" required></div>
                 <div class="form-group"><label>Role</label><input type="text" name="role" id="edit_role" required></div>
+                <div class="form-group"><label>Biography</label><textarea name="bio" id="edit_bio" rows="5"></textarea></div>
                 <div class="form-group"><label>New Image (optional)</label><input type="file" name="image"></div>
                 <div style="display: flex; gap: 10px;">
                     <button type="submit">Save</button>
@@ -488,10 +530,11 @@
             document.getElementById('tab-' + id).style.display = 'block';
             document.querySelector(`.tab-actions button[onclick="showTab('${id}')"]`)?.classList.add('active');
         }
-        function openEdit(id, name, role) {
+        function openEdit(id, name, role, bio) {
             document.getElementById('edit_id').value = id;
             document.getElementById('edit_name').value = name;
             document.getElementById('edit_role').value = role;
+            document.getElementById('edit_bio').value = bio || '';
             document.getElementById('editModal').style.display = 'flex';
         }
         function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
@@ -506,32 +549,22 @@ if ("serviceWorker" in navigator) {
 
 let lastMessageId = {{ contact_messages[0].id if contact_messages else 0 }};
 
-if (window.Notification && Notification.permission === 'default') {
-    Notification.requestPermission();
+function urlBase64ToUint8Array(value) {
+    const padding = '='.repeat((4 - value.length % 4) % 4);
+    const base64 = (value + padding).replace(/-/g, '+').replace(/_/g, '/');
+    return Uint8Array.from(atob(base64), character => character.charCodeAt(0));
 }
 
-setInterval(() => {
-    fetch(`/api/check_messages?last_id=${lastMessageId}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data && data.length > 0) {
-                let showNotification = window.Notification && Notification.permission === 'granted';
-                data.forEach(msg => {
-                    if (showNotification) {
-                        new Notification('New Visitor Message', {
-                            body: `${msg.name} sent a message: ${msg.subject || 'No subject'}`,
-                            icon: '/static/images/logo.png'
-                            url="/"
-                        });
-                    }
-                    lastMessageId = Math.max(lastMessageId, msg.id);
-                });
-                // Reload to show the new messages in the list after a short delay
-                setTimeout(() => window.location.reload(), 3000);
-            }
-        })
-        .catch(err => console.error('Error checking messages:', err));
-}, 10000); // Check every 10 seconds
+document.getElementById('enable-admin-notifications')?.addEventListener('click', async () => {
+    const status = document.getElementById('enable-admin-notifications');
+    const publicKey = document.body.dataset.vapidPublicKey;
+    if (!publicKey || !('serviceWorker' in navigator) || !('PushManager' in window)) { status.textContent = 'Notifications unavailable'; return; }
+    if (await Notification.requestPermission() !== 'granted') { status.textContent = 'Notifications declined'; return; }
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(publicKey) });
+    const response = await fetch('{{ url_for("subscribe_push") }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': '{{ csrf_token() }}' }, body: JSON.stringify({ ...subscription.toJSON(), audience: 'admin' }) });
+    status.textContent = response.ok ? 'Notifications enabled' : 'Try again';
+});
 
     </script>
 </body>

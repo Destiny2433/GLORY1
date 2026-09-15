@@ -87,16 +87,25 @@ const observerOptions = {
     rootMargin: '0px 0px -50px 0px'
 };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, observerOptions);
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const observer = 'IntersectionObserver' in window
+    ? new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                currentObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions)
+    : null;
 
-document.querySelectorAll('.fade-in').forEach(el => {
-    observer.observe(el);
+document.querySelectorAll('.fade-in, .programme-card, .story-band, .leader-card, .gallery-item, .editorial-section').forEach((element, index) => {
+    if (!prefersReducedMotion) element.style.setProperty('--reveal-delay', `${Math.min(index * 45, 240)}ms`);
+    if (prefersReducedMotion || !observer) {
+        element.classList.add('visible');
+    } else {
+        observer.observe(element);
+    }
 });
 
 // Particle effect for hero
@@ -119,7 +128,7 @@ createParticles();
 // Scroll-triggered animations
 window.addEventListener('scroll', () => {
     const hero = document.querySelector('.hero');
-    if (hero) {
+    if (hero && !document.body.classList.contains('public-home') && !prefersReducedMotion) {
         const scrolled = window.pageYOffset;
         const rate = scrolled * -0.5;
         hero.style.transform = `translateY(${rate}px)`;
@@ -143,6 +152,17 @@ if (subtitle) {
 
     setTimeout(typeWriter, 2000);
 }
+
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', () => {
+        const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+        if (!submitButton || form.dataset.submitting === 'true') return;
+        form.dataset.submitting = 'true';
+        submitButton.disabled = true;
+        submitButton.dataset.originalLabel = submitButton.textContent;
+        submitButton.textContent = 'Submitting...';
+    });
+});
 
 // Hover effects for minister cards
 document.querySelectorAll('.minister-card').forEach(card => {
@@ -421,11 +441,21 @@ if (backToTopBtn) {
 
 // Navigation Menu Toggle
 const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
+const navMenu = document.querySelector('.site-menu') || document.querySelector('.nav-menu');
 if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
+        const isOpen = navMenu.classList.toggle('open');
+        navMenu.classList.toggle('active', isOpen);
         menuToggle.classList.toggle('active');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('open', 'active');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        });
     });
 
     // Close menu when a link is clicked

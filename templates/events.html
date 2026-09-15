@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Events | ECWA Glory Concert</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+</head>
+<body class="clean-page">
+    <nav class="site-nav">
+        <div class="site-nav-inner">
+            <a class="site-brand" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA logo"><span>GLORY<small>CONCERT</small></span></a>
+            <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+            <ul class="site-menu">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a class="active" href="{{ url_for('events') }}">Programme</a></li>
+                <li><a href="{{ url_for('about') }}">Our story</a></li>
+                <li><a href="{{ url_for('gallery_page') }}">Gallery</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a class="nav-cta" href="{{ url_for('volunteer') }}">Join the team</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="section visible event-page-shell">
+        <div class="container event-page-wrap">
+            <div class="event-page-header" data-aos="fade-up">
+                <p class="eyebrow">The programme</p>
+                <h1>Gather with us.</h1>
+                <p>Explore the gatherings of the ECWA Glory Concert and keep track of what is upcoming, ongoing, or already concluded.</p>
+            </div>
+
+            <div class="event-list">
+                {% for event in events %}
+                <article class="event-card {% if event.status_label == 'Completed' %}past-event{% endif %}" data-aos="fade-up">
+                    <div class="event-card-header">
+                        <span class="event-type">{{ event.event_type|title if event.event_type else 'Concert' }}</span>
+                        <span class="event-status {% if event.status_label == 'Completed' %}event-status-past{% endif %}">{{ event.status_label }}</span>
+                    </div>
+                    <h2>{{ event.title }}</h2>
+                    <p>{{ event.event_date }}{% if event.start_time %} · {{ event.start_time }}{% endif %}</p>
+                    {% if event.venue %}<p>{{ event.venue }}</p>{% endif %}
+                    <a class="button button-gold" href="{{ url_for('event_detail', slug=event.slug) }}">View event</a>
+                </article>
+                {% else %}
+                <div class="empty-state-panel">No published events are available yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 700, once: true, easing: 'ease-out-cubic' });
+    </script>
+</body>
+</html>

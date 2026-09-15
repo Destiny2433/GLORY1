@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Page not found | ECWA Glory Concert</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="clean-page">
+    <main class="error-page">
+        <p class="section-kicker">ECWA Glory Concert</p>
+        <p class="error-code">404</p>
+        <h1>We could not find that page.</h1>
+        <p>The page may have moved, or the address may be incorrect. You can return to the concert programme from here.</p>
+        <a class="cta-button" href="{{ url_for('index') }}">Return home</a>
+    </main>
+</body>
+</html>
