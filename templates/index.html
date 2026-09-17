@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="ECWA Glory Concert is a recurring gospel worship gathering convened by ECWA Lagos West DCC.">
-    <title>ECWA Glory Concert - The Largest Gospel Event in Lagos</title>
+    <title>ECWA Glory Concert - The Largest ECWA Event in Lagos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,14 +42,7 @@
     </nav>
 
     <header class="home-hero">
-        <div class="home-hero-media">
-            {% if hero and hero.livestream_url %}
-                {% set yt_id = hero.livestream_url.split('v=')[-1].split('&')[0] if 'v=' in hero.livestream_url else hero.livestream_url.split('/')[-1] %}
-                <iframe class="hero-livestream-frame" width="100%" height="100%" src="https://www.youtube.com/embed/{{ yt_id }}?autoplay=1&mute=1&loop=1&playlist={{ yt_id }}&controls=0&showinfo=0&rel=0&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="pointer-events: none;"></iframe>
-            {% else %}
-                <video autoplay muted loop playsinline poster="{{ url_for('static', filename='images/gloryt.jpg') }}"><source src="{{ url_for('static', filename='images/VID.mp4') }}" type="video/mp4"></video>
-            {% endif %}
-        </div>
+        <div class="home-hero-media"><video autoplay muted loop playsinline poster="{{ url_for('static', filename='images/gloryt.jpg') }}"><source src="{{ url_for('static', filename='images/VID.mp4') }}" type="video/mp4"></video></div>
         <div class="home-hero-content">
             <p class="eyebrow light">ECWA's Largest Gospel Concert</p>
             <h1>{{ hero.main_title if hero else 'ECWA GLORY' }}<span>Concert</span></h1>
