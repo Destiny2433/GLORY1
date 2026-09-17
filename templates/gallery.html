@@ -99,13 +99,15 @@
             <h2>Gallery</h2>
             <div class="gallery-grid">
                 {% for image in images %}
-                
                 <div class="gallery-item">
-                    <img src="{{ url_for('static', filename='images/' ~ image.image_path) }}" alt="Gallery Image" loading="lazy"></div>
-                
+                    {% set img_url = image.image_path if image.image_path.startswith('http') else url_for('static', filename='images/' ~ image.image_path) %}
+                    <img src="{{ img_url }}" alt="ECWA Glory Concert Gallery Image" loading="lazy" width="400" height="300">
+                </div>
                 {% endfor %}
+            </div>
         </div>
-        </div>
-    </div>
     </section>
+    
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

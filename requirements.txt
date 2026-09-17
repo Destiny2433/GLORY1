@@ -1,5 +1,8 @@
 Flask
-Werkzeug
+gunicorn
+psycopg2-binary
 python-dotenv
 pywebpush
-gunicorn
+Werkzeug
+psycopg2
+supabase
