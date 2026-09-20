@@ -237,7 +237,18 @@
         <section class="gallery-band"><div class="section-head"><p class="eyebrow">Moments of Glory</p><h2>Gathered in praise.</h2><a class="text-link" href="{{ url_for('gallery_page') }}">Visit the gallery <span>&rarr;</span></a></div><div class="home-gallery">{% for image in ['pr.jpg', 'logo.jpg', 'gloryt.jpg', 'gtr.jpg'] %}<img src="{{ url_for('static', filename='images/' ~ image) }}" alt="ECWA Glory Concert moment" loading="lazy">{% endfor %}</div><a class="button button-gold" href="{{ url_for('gallery')}}">View Full Gallery</a></section>
 
         <section class="updates-band"><div><p class="eyebrow light">Keep in step</p><h2>Be the first to know.</h2><p>Receive updates when new events and announcements are published.</p></div><div class="updates-actions"><a class="button button-gold" href="{{ url_for('notifications') }}">Enable notifications</a><a class="button button-ghost" href="{{ url_for('volunteer') }}">Volunteer with us</a></div></section>
-    </main>
+        <div class="live-service-section section fade-in visible">
+        <div class="container" style="text-align: center;">
+            <div class="live-indicator" style="display: flex; align-items: center; justify-content: center; gap: 10px; color: #ff4d4d; font-weight: bold; margin-bottom: 20px;">
+                <span class="live-dot" style="width: 12px; height: 12px; background: #ff4d4d; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> LIVE NOW
+            </div>
+            <div class="service-player" style="margin-bottom: 30px;">
+                <iframe width="100%" height="450" src="https://www.youtube.com/embed/sWLKtaAyI10" frameborder="0" allowfullscreen="" style="border-radius: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.5);"></iframe>
+            </div>
+            <a href="https://www.youtube.com/watch?v=sWLKtaAyI10&amp;list=PPSV" target="_blank" class="cta-button">Watch Full Service</a>
+        </div>
+    
+   </main>
 
     <footer class="site-footer"><div class="footer-brand"><a class="site-brand" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/ECWA LOGO-modified.png') }}" alt="ECWA logo"><span>GLORY<small>CONCERT</small></span></a><p>A shared table of worship, praise and thanksgiving.</p></div><div><p class="footer-label">Explore</p><a href="{{ url_for('events') }}">Programme</a><a href="{{ url_for('about') }}">Our story</a><a href="{{ url_for('gallery_page') }}">Gallery</a></div><div><p class="footer-label">Take part</p><a href="{{ url_for('volunteer') }}">Volunteer</a><a href="{{ url_for('notifications') }}">Get updates</a><a href="{{ url_for('contact') }}">Contact the team</a></div><div><p class="footer-label">Connect</p><a href="mailto:info@ecwalagoswestdcc.com">info@ecwalagoswestdcc.com</a><div class="footer-social"><a href="https://www.instagram.com/ecwalagoswestdcc" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.youtube.com/@gloryconcert" target="_blank" rel="noreferrer">YouTube</a></div></div><div class="footer-bottom"><span>&copy; 2026 ECWA Lagos West DCC</span><span>Created for God's glory.</span></div></footer>
     <script src="{{ url_for('static', filename='script.js') }}"></script>

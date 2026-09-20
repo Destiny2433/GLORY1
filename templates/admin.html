@@ -246,7 +246,16 @@
                 <p class="text-slate-400">To edit existing events, visit the <a href="{{ url_for('admin_events') }}" class="text-brand-400 hover:underline">Advanced Events Dashboard &rarr;</a></p>
             </div>
         </div>
-
+         <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+  <div class="md:col-span-2">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="admin_action" value="add_gallery">
+                            <label class="block text-sm font-medium text-slate-400 mb-2">FIRST SECTION IMAGE UPLOAD</label>
+                            <input type="file" name="first_image" accept="image/*" class="w-full text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-500/10 file:text-brand-400 hover:file:bg-brand-500/20 transition-all cursor-pointer">
+                            
+                    <button type="submit" class="bg-brand-500 hover:bg-brand-400 text-slate-900 font-bold py-2 px-6 rounded-xl transition-all">Upload</button>
+                        </div>
+                        </form>
         <!-- GALLERY SECTION -->
         <div id="sec-gallery" class="admin-section hidden">
             <header class="mb-8 flex justify-between items-end flex-wrap gap-4">

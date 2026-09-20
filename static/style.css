@@ -913,7 +913,7 @@ p {
 .sidenav {
     height: 100%;
     width: 0;
-    position: fixed;
+    position: relative;
     z-index: 1;
     top: 0;
     left: 0;
@@ -1448,9 +1448,7 @@ form input[type="submit"]:disabled {
 }
 
 @media (max-width: 680px) {
-    .public-home .site-nav {
-        position: absolute;
-    }
+
 
     .public-home .site-menu {
         display: flex;

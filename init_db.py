@@ -24,6 +24,13 @@ def init_db():
     ''')
 
     cursor.execute('''
+    CREATE TABLE first_image (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image_path TEXT NOT NULL
+    )
+    ''')
+    
+    cursor.execute('''
         CREATE TABLE gallery (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             image_path TEXT NOT NULL

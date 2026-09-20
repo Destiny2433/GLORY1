@@ -98,6 +98,7 @@ def get_db():
             CREATE TABLE IF NOT EXISTS hero (id INTEGER PRIMARY KEY AUTOINCREMENT, main_title TEXT, subtitle TEXT, media_path TEXT, livestream_url TEXT);
             CREATE TABLE IF NOT EXISTS push_subscriptions (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT NOT NULL UNIQUE, p256dh TEXT NOT NULL, auth TEXT NOT NULL, audience TEXT NOT NULL DEFAULT 'visitor', active INTEGER NOT NULL DEFAULT 1, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
             CREATE TABLE IF NOT EXISTS site_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS first_image (id INTEGER PRIMARY KEY AUTOINCREMENT, image_path TEXT)
         ''')
         ensure_column(db, 'events', 'slug', 'TEXT')
         ensure_column(db, 'events', 'edition_year', 'INTEGER')
@@ -547,6 +548,7 @@ def admin():
                 else: db.execute('UPDATE ministers SET name=?, role=?, bio=? WHERE id=?', (n, r, bio, mid))
             elif action == 'delete_minister':
                 db.execute('DELETE FROM ministers WHERE id=?', (request.form.get('minister_id'),))
+            elif action == 'add'
             elif action == 'add_gallery':
                 for f in request.files.getlist('images'):
                     if f and f.filename:

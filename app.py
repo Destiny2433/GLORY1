@@ -370,7 +370,13 @@ def initialize_database():
                 image_path TEXT
             )
         """)
-
+        
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS first_image (
+                id SERIAL PRIMARY KEY,
+                image_path TEXT
+            )
+        """)
 
         # ====================================================
         # MINISTERS

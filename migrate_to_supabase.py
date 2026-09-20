@@ -48,6 +48,7 @@ TABLES = [
     "push_subscriptions",
     "site_settings",
     "volunteer_applications",
+    "first_image",
 ]
 
 
